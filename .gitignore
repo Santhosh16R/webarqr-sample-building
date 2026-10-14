@@ -1,0 +1,18 @@
+# Synced ChatGPT project context and references
+/sources/
+/AGENTS.md
+
+# Installed packages, caches, and temporary files
+node_modules/
+/outputs/verification/
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+Thumbs.db
+
+# Local credentials and configuration
+.env
+.env.*
+!.env.example
+*.log
