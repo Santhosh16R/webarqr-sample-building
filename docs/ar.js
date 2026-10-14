@@ -61,6 +61,7 @@ export async function start(container, onProgress, onTracking) {
   const id = ++runId;
   reportTracking = onTracking;
   await prepare(container);
+  reset();
   if (id !== runId) throw new Error('Camera startup was cancelled. Please try again.');
   onTracking(false);
   onProgress('Allow camera access when your browser asks.');
