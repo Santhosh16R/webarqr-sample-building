@@ -84,7 +84,14 @@
     "checks": "tower-animation-checks.json and tower-usdz-checks.json",
     "physicalPhonesTested": false,
     "constructionFile": "iNXT_Tower_Construction.glb",
-    "blueScanIncluded": true
+    "blueScanIncluded": true,
+    "constructionCrew": {
+      "cranes": 2,
+      "roboticArms": 2,
+      "drones": 3,
+      "synchronizedSeconds": 20,
+      "nativeAnimationIncluded": true
+    }
   },
   "activeMode": "floor-only",
   "floorOnlyUI": {

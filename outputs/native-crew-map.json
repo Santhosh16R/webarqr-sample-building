@@ -1,0 +1,278 @@
+[
+  {
+    "name": "Drone_1_rotor_1",
+    "owner": "Crew_Drone_1",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1470"
+  },
+  {
+    "name": "Drone_1_rotor_2",
+    "owner": "Crew_Drone_1",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1471"
+  },
+  {
+    "name": "Drone_1_rotor_3",
+    "owner": "Crew_Drone_1",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1472"
+  },
+  {
+    "name": "Drone_1_rotor_4",
+    "owner": "Crew_Drone_1",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1473"
+  },
+  {
+    "name": "Drone_1_body",
+    "owner": "Crew_Drone_1",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1495"
+  },
+  {
+    "name": "Drone_1_beacon",
+    "owner": "Crew_Drone_1",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1498"
+  },
+  {
+    "name": "Drone_2_rotor_1",
+    "owner": "Crew_Drone_2",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1474"
+  },
+  {
+    "name": "Drone_2_rotor_2",
+    "owner": "Crew_Drone_2",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1475"
+  },
+  {
+    "name": "Drone_2_rotor_3",
+    "owner": "Crew_Drone_2",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1476"
+  },
+  {
+    "name": "Drone_2_rotor_4",
+    "owner": "Crew_Drone_2",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1477"
+  },
+  {
+    "name": "Drone_2_body",
+    "owner": "Crew_Drone_2",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1496"
+  },
+  {
+    "name": "Drone_2_beacon",
+    "owner": "Crew_Drone_2",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1499"
+  },
+  {
+    "name": "Drone_3_rotor_1",
+    "owner": "Crew_Drone_3",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1478"
+  },
+  {
+    "name": "Drone_3_rotor_2",
+    "owner": "Crew_Drone_3",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1479"
+  },
+  {
+    "name": "Drone_3_rotor_3",
+    "owner": "Crew_Drone_3",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1480"
+  },
+  {
+    "name": "Drone_3_rotor_4",
+    "owner": "Crew_Drone_3",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1481"
+  },
+  {
+    "name": "Drone_3_body",
+    "owner": "Crew_Drone_3",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1497"
+  },
+  {
+    "name": "Drone_3_beacon",
+    "owner": "Crew_Drone_3",
+    "role": "drone",
+    "path": "/Root/Scenes/Scene/Object_1500"
+  },
+  {
+    "name": "Crane_1_hoist_cable",
+    "owner": "Crew_Crane_1",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1456"
+  },
+  {
+    "name": "Crane_1_hook",
+    "owner": "Crew_Crane_1",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1458"
+  },
+  {
+    "name": "Crane_1_blue_delivery_panel",
+    "owner": "Crew_Crane_1",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1460"
+  },
+  {
+    "name": "Crane_1_boom",
+    "owner": "Crew_Crane_1",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1508"
+  },
+  {
+    "name": "Crane_1_counterweight",
+    "owner": "Crew_Crane_1",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1506"
+  },
+  {
+    "name": "Crane_1_telescopic_mast",
+    "owner": "Crew_Crane_1",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1454"
+  },
+  {
+    "name": "Crane_1_base",
+    "owner": "Crew_Crane_1",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1501"
+  },
+  {
+    "name": "Crane_2_hoist_cable",
+    "owner": "Crew_Crane_2",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1457"
+  },
+  {
+    "name": "Crane_2_hook",
+    "owner": "Crew_Crane_2",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1459"
+  },
+  {
+    "name": "Crane_2_blue_delivery_panel",
+    "owner": "Crew_Crane_2",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1461"
+  },
+  {
+    "name": "Crane_2_boom",
+    "owner": "Crew_Crane_2",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1509"
+  },
+  {
+    "name": "Crane_2_counterweight",
+    "owner": "Crew_Crane_2",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1507"
+  },
+  {
+    "name": "Crane_2_telescopic_mast",
+    "owner": "Crew_Crane_2",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1455"
+  },
+  {
+    "name": "Crane_2_base",
+    "owner": "Crew_Crane_2",
+    "role": "crane",
+    "path": "/Root/Scenes/Scene/Object_1502"
+  },
+  {
+    "name": "Robot_1_shoulder",
+    "owner": "Crew_Robot_1",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1462"
+  },
+  {
+    "name": "Robot_1_elbow",
+    "owner": "Crew_Robot_1",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1463"
+  },
+  {
+    "name": "Robot_1_wrist",
+    "owner": "Crew_Robot_1",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1466"
+  },
+  {
+    "name": "Robot_1_welding_light",
+    "owner": "Crew_Robot_1",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1468"
+  },
+  {
+    "name": "Robot_1_lower_link",
+    "owner": "Crew_Robot_1",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1514"
+  },
+  {
+    "name": "Robot_1_upper_link",
+    "owner": "Crew_Robot_1",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1511"
+  },
+  {
+    "name": "Robot_1_base",
+    "owner": "Crew_Robot_1",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1503"
+  },
+  {
+    "name": "Robot_2_shoulder",
+    "owner": "Crew_Robot_2",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1464"
+  },
+  {
+    "name": "Robot_2_elbow",
+    "owner": "Crew_Robot_2",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1465"
+  },
+  {
+    "name": "Robot_2_wrist",
+    "owner": "Crew_Robot_2",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1467"
+  },
+  {
+    "name": "Robot_2_welding_light",
+    "owner": "Crew_Robot_2",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1469"
+  },
+  {
+    "name": "Robot_2_lower_link",
+    "owner": "Crew_Robot_2",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1515"
+  },
+  {
+    "name": "Robot_2_upper_link",
+    "owner": "Crew_Robot_2",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1512"
+  },
+  {
+    "name": "Robot_2_base",
+    "owner": "Crew_Robot_2",
+    "role": "robot",
+    "path": "/Root/Scenes/Scene/Object_1504"
+  }
+]

@@ -1,6 +1,7 @@
 // Add portable blue scanning geometry and glTF animation to the supplied tower.
 import {readFile,writeFile} from 'node:fs/promises';
 import {TorusGeometry} from 'three';
+import {addConstructionCrew} from './construction_crew.mjs';
 const source=await readFile('docs/assets/iNXT_Tower_Animated.glb');
 const length=source.readUInt32LE(12);const doc=JSON.parse(source.subarray(20,20+length));
 const binaryStart=20+length+8;const chunks=[source.subarray(binaryStart,binaryStart+doc.buffers[0].byteLength)];
@@ -9,7 +10,7 @@ function accessor(array,type,componentType,min,max){
  const pad=(4-byteLength%4)%4;if(pad){chunks.push(Buffer.alloc(pad));byteLength+=pad;}
  const bytes=Buffer.from(array.buffer,array.byteOffset,array.byteLength);const view=doc.bufferViews.length;
  doc.bufferViews.push({buffer:0,byteOffset:byteLength,byteLength:bytes.length});chunks.push(bytes);byteLength+=bytes.length;
- const index=doc.accessors.length;const size={SCALAR:1,VEC3:3}[type];
+ const index=doc.accessors.length;const size={SCALAR:1,VEC3:3,VEC4:4}[type];
  doc.accessors.push({bufferView:view,componentType,count:array.length/size,type,...(min?{min,max}:{})});return index;
 }
 const material=doc.materials.length;
@@ -21,10 +22,11 @@ const scan=doc.nodes.length;doc.nodes.push({name:'Construction scan',mesh,transl
 const halo=doc.nodes.length;doc.nodes.push({name:'Floor scan halo',mesh,translation:[0,-.25,0]});
 doc.scenes[doc.scene??0].nodes.push(scan,halo);
 const times=new Float32Array(Array.from({length:481},(_,i)=>i/24));const input=accessor(times,'SCALAR',5126,[0],[20]);
-function track(node,path,values){const a=doc.animations[0];const output=accessor(new Float32Array(values),'VEC3',5126);a.channels.push({sampler:a.samplers.length,target:{node,path}});a.samplers.push({input,output,interpolation:'LINEAR'});}
+function track(node,path,values){const a=doc.animations[0];const output=accessor(new Float32Array(values),path==='rotation'?'VEC4':'VEC3',5126);a.channels.push({sampler:a.samplers.length,target:{node,path}});a.samplers.push({input,output,interpolation:'LINEAR'});}
 track(scan,'translation',Array.from(times,t=>[0,-.25+160*(t/20),0]).flat());
 track(scan,'scale',Array.from(times,t=>{const s=t>=20?0:t>19?20-t:1;return [s,s,s];}).flat());
 track(halo,'scale',Array.from(times,t=>{const s=t>=20?0:(.94+.06*Math.sin(t*4)**2)*Math.min(1,(20-t)*2);return [s,s,s];}).flat());
+addConstructionCrew({doc,accessor,track,times});
 doc.buffers[0].byteLength=byteLength;
 const raw=Buffer.from(JSON.stringify(doc));const json=Buffer.alloc(Math.ceil(raw.length/4)*4,32);raw.copy(json);
 const bin=Buffer.concat(chunks);const padded=Buffer.alloc(Math.ceil(bin.length/4)*4);bin.copy(padded);

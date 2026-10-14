@@ -7,9 +7,9 @@
   <meta name="description" content="Bring an animated iNXT tower into your space with floor-based augmented reality. No app to install.">
   <title>Webarqr — A new perspective</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261014-ground">
+  <link rel="stylesheet" href="styles.css?v=20261014-crew">
   <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}</script>
-  <script type="module" src="app.js?v=20261014-ground"></script>
+  <script type="module" src="app.js?v=20261014-crew"></script>
 </head>
 <body>
   <div id="ar-stage" aria-hidden="true"></div>
@@ -23,10 +23,10 @@
         <div class="hero-copy">
           <p class="eyebrow"><span></span> A LITTLE SPACE TO EXPLORE</p>
           <h1 id="hero-title">A building.<br>A whole new<br><em>perspective.</em></h1>
-          <p class="intro">Place the tower on your floor and watch it rise, with a blue scan following every stage of construction.</p>
+          <p class="intro">Place the tower on your floor and watch cranes, robotic arms and drones work alongside its blue-scanned construction.</p>
           <div class="hero-actions">
             <button id="start" class="button primary" disabled>Place on floor <span aria-hidden="true">↗</span></button>
-            <a id="native-floor" class="button primary" href="assets/floor-building.usdz" hidden><img src="assets/tower-preview.png" width="22" height="22" alt="">Place on floor <span aria-hidden="true">↗</span></a>
+            <a id="native-floor" class="button primary" href="assets/floor-building.usdz" hidden><img src="assets/crew-preview.png" width="22" height="22" alt="">Place on floor <span aria-hidden="true">↗</span></a>
           </div>
           <p id="floor-support" class="microcopy" role="status">Checking floor AR support…</p>
           <p id="launch-status" class="launch-status" role="status" aria-live="polite"></p>
@@ -34,7 +34,7 @@
         </div>
         <div class="model-card">
           <div class="card-heading"><span class="pill">THE FIRST EDITION</span><span class="card-number">01 / 01</span></div>
-          <div class="model-image"><img src="assets/tower-preview.png" alt="iNXT tower with cyan lighting and animated construction" width="1200" height="1200" fetchpriority="high"></div>
+          <div class="model-image"><img src="assets/crew-preview.png" alt="Progressive iNXT tower construction with cranes, robotic arms, drones and a blue scan" width="1200" height="1200" fetchpriority="high"></div>
           <div class="model-caption"><div><p>iNXT Tower</p><span>Progressive construction / 20 seconds</span></div><span class="model-badge">3D → AR</span></div>
           <span class="coordinate" aria-hidden="true">X &nbsp; Y &nbsp; Z / IN YOUR SPACE</span>
         </div>
@@ -44,7 +44,7 @@
         <ol class="steps">
           <li><span class="step-number">01</span><div><h3>Find your floor</h3><p>Open floor AR and aim at a clear, well-lit patch of floor. Move your phone slowly.</p></div></li>
           <li><span class="step-number">02</span><div><h3>Tap to build</h3><p>Tap the blue ring to place the tower. In a native viewer, use its floor-placement controls.</p></div></li>
-          <li><span class="step-number">03</span><div><h3>Watch it rise</h3><p>A blue scan follows construction. Replay the animation, or reset to choose another spot.</p></div></li>
+          <li><span class="step-number">03</span><div><h3>Watch it rise</h3><p>Cranes lift, robotic arms work and drones fly as the tower rises. Replay the scene, or reset to choose another spot.</p></div></li>
         </ol>
       </section>
       <section class="help"><details><summary>A little help getting started <span aria-hidden="true">+</span></summary><div><p>Use Safari on iPhone or Chrome on an ARCore-supported Android phone. Aim at the actual floor; horizontal-surface tracking can also recognize tables.</p><p>Allow AR access when asked. Native viewers provide their own placement and playback controls. No marker is needed.</p></div></details></section>

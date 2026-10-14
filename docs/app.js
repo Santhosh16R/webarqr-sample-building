@@ -47,15 +47,15 @@ nativeLink.addEventListener('click',()=>message('Opening floor AR. Aim at the fl
 async function detectFloorSupport(){
  const probe=document.createElement('a');const quickLook=probe.relList?.supports?.('ar');
  const android=/Android/i.test(navigator.userAgent);nativeAvailable=quickLook||android;
- if(quickLook){nativeLink.rel='ar';nativeLink.href=new URL('assets/floor-building.usdz?v=20261014-ground#allowsContentScaling=0',document.baseURI).href;}
+ if(quickLook){nativeLink.rel='ar';nativeLink.href=new URL('assets/floor-building.usdz?v=20261014-crew#allowsContentScaling=0',document.baseURI).href;}
  else if(android){
-  const file=new URL('assets/floor-building.glb?v=20261014-ground',document.baseURI).href;
+  const file=new URL('assets/floor-building.glb?v=20261014-crew',document.baseURI).href;
   const fallback=new URL('./?native-ar=unavailable',document.baseURI).href;
   nativeLink.href=`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(file)}&mode=ar_only&resizable=false&title=iNXT%20Tower#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(fallback)};end;`;
  }
  try{
   if(navigator.xr&&await navigator.xr.isSessionSupported('immersive-ar')){
-   runtime=await import('./floor-ar.js?v=20261014-ground');startButton.hidden=false;startButton.disabled=false;
+   runtime=await import('./floor-ar.js?v=20261014-crew');startButton.hidden=false;startButton.disabled=false;
    support.textContent='Find the floor, tap the blue ring, and watch it rise. Maximum height: 30 cm.';
   }else{
    startButton.hidden=true;nativeLink.hidden=!nativeAvailable;

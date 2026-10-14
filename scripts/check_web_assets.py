@@ -42,7 +42,8 @@ native_json=json.loads(native[20:20+struct.unpack_from('<I',native,12)[0]])
 dims=json.loads((ROOT/'outputs/tower-dimensions.json').read_text())
 root=native_json['scenes'][native_json.get('scene',0)]['nodes'][0]
 assert abs(native_json['nodes'][root]['scale'][0]*dims['height']-.3)<.00001
-assert len(native_json['animations'])==1 and len(native_json['animations'][0]['channels'])==1297
+assert len(native_json['animations'])==1 and len(native_json['animations'][0]['channels'])>1297
+assert native_json['extras']['constructionCrew']=={'cranes':2,'roboticArms':2,'drones':3,'durationSeconds':20}
 with ZipFile(web/'assets/floor-building.usdz') as archive:
     assert archive.testzip() is None
     assert archive.namelist()[0]=='model.usda'

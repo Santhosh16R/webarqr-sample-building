@@ -2,7 +2,17 @@
   "result": "passed",
   "duration": 20,
   "clip": "Progressive Construction",
-  "tracks": 1297,
+  "tracks": 1339,
+  "crew": {
+    "cranes": 2,
+    "roboticArms": 2,
+    "drones": 3
+  },
+  "sceneEnvelopeCm": [
+    13.922443728520795,
+    29.784360721016807,
+    10.229041201689279
+  ],
   "heightsMetresAt0_5_10_15_20": [
     0.28975247390115105,
     0.28975247390115105,
@@ -11,19 +21,23 @@
     0.29784360721016806
   ],
   "activeMeshesAt0_5_10_15_20": [
-    11,
-    271,
-    733,
-    1177,
-    1367
+    55,
+    317,
+    779,
+    1223,
+    1409
   ],
   "checks": [
     "24 fps height envelope <= 30 cm",
+    "equipment stays above floor",
     "construction progresses",
     "holds completed frame",
-    "replay restarts",
+    "replay restarts crew motion",
     "blue scan rises during construction",
-    "scanner disappears at completion and restores on replay"
+    "scanner disappears at completion and restores on replay",
+    "crane hooks lift",
+    "robot shoulders articulate and welding stops",
+    "drones fly, rotors spin, and land at completion"
   ],
   "physicalPhonesTested": false
 }

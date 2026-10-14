@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createSurfacePlacement} from './surface-placement.js?v=20261014-ground';
-import {createTowerAnimation,showTowerProgress} from './tower-animation.js?v=20261014-ground';
-import {DEFAULT_WIDTH_CM,floorScaleFromWidthCm} from './model-size.js?v=20261014-ground';
+import {createSurfacePlacement} from './surface-placement.js?v=20261014-crew';
+import {createTowerAnimation,showTowerProgress} from './tower-animation.js?v=20261014-crew';
+import {DEFAULT_WIDTH_CM,floorScaleFromWidthCm} from './model-size.js?v=20261014-crew';
 
 let current;
 const url = filename => new URL(`assets/${filename}`,import.meta.url).href;
@@ -32,7 +32,7 @@ export async function start(container,overlay,{onStatus,onEnd}) {
     const pivot=state.pivot=new THREE.Group();root.add(pivot);
 
     state.placement=createSurfacePlacement(root);
-    const gltf=await new GLTFLoader().loadAsync(url('iNXT_Tower_Construction.glb'));
+    const gltf=await new GLTFLoader().loadAsync(url('iNXT_Tower_Construction.glb?v=20261014-crew'));
     const model=state.model=gltf.scene;
     if(state.ended) {disposeObject(model);return false;}
     state.effects=createTowerAnimation(gltf,{onProgress:showTowerProgress});state.model=state.effects.model;

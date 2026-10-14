@@ -29,9 +29,11 @@ Native viewers control playback timing and interface. Their controls cannot be r
 
 ## Construction and blue scanning
 
-`docs/assets/iNXT_Tower_Animated.glb` is the user's unmodified original source. `scripts/build_construction_tower.mjs` creates `iNXT_Tower_Construction.glb` with a rising blue emissive scan ring and pulsing floor halo in the same animation clip. Both effects disappear at completion and restart with replay. Their geometry and animation are portable, so they are also included in the native GLB and USDZ rather than relying on browser shaders.
+`docs/assets/iNXT_Tower_Animated.glb` is the user's unmodified original source. `scripts/build_construction_tower.mjs` creates `iNXT_Tower_Construction.glb` with a rising blue emissive scan ring, pulsing floor halo, two cranes, two robotic arms and three drones in the same animation clip. Both effects disappear at completion and restart with replay. Their geometry and animation are portable, so they are also included in the native GLB and USDZ rather than relying on browser shaders.
 
-The construction model's full animation envelope stays within the original 40.60 × 165.65 × 38.00 units. Wrappers handle physical scale and the base offset without modifying the original animation tracks. Browser playback pauses until a valid floor placement and holds the completed frame. Horizontal placement uses yaw only, preserving the upright tower.
+The tower and plaza retain their original 40.60 × 165.65 × 38.00 units. Construction equipment extends the footprint around the tower; the complete animated scene still stays within the same 30 cm height cap. Wrappers handle physical scale and the base offset without modifying the original animation tracks. Browser playback pauses until a valid floor placement and holds the completed frame. Horizontal placement uses yaw only, preserving the upright tower.
+
+The crew is built in `scripts/construction_crew.mjs`. Crane masts rise with construction while turntables swing, trolleys move and hooks lift blue panels. Robotic shoulders, elbows and wrists move with pulsing welding lights. Three drones orbit and climb with spinning rotors, then land as construction finishes. Work lights and crane loads settle at completion. These are synchronized visual animations in the shared 20-second clip; Replay animation resets the entire crew. The browser interface remains Replay animation, Reset and Close.
 
 ## Regenerate and verify
 

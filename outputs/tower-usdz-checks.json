@@ -1,7 +1,8 @@
 {
   "result": "passed",
-  "meshes": 1369,
-  "animatedTransforms": 1360,
+  "meshes": 1415,
+  "animatedTransforms": 1402,
+  "crewMeshes": 46,
   "heightsMetresAt0_5_10_15_20": [
     0.2918502867,
     0.2918502867,
@@ -10,19 +11,21 @@
     0.2999999999505001
   ],
   "activeAnimatedMeshesAt0_5_10_15_20": [
-    2,
-    262,
-    724,
-    1168,
-    1358
+    42,
+    304,
+    766,
+    1210,
+    1396
   ],
   "checks": [
     "OpenUSD loads complete USDZ",
     "geometry references resolve",
     "animation time samples",
     "30 cm height cap",
-    "two animated blue scanners disappear at completion",
-    "scan rises during construction"
+    "blue scanners disappear at completion",
+    "scan rises during construction",
+    "cranes, robotic arms and drones animate in native USDZ",
+    "native drones land at completion"
   ],
   "physicalIPhoneTested": false
 }

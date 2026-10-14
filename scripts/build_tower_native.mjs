@@ -19,6 +19,13 @@ const bytes=Buffer.concat([header,padded,binaryChunk]);await writeFile('docs/ass
 const asset=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
 const mixer=new AnimationMixer(asset.scene);const action=mixer.clipAction(asset.animations[0]);action.setLoop(LoopOnce,1);action.clampWhenFinished=true;action.play();
 const meshes=[];asset.scene.traverse(o=>{if(o.isMesh)meshes.push(o);});
+const crewMeshes=[];
+for(const object of meshes){
+ let owner=object;
+ while(owner&&!owner.userData.crewRole)owner=owner.parent;
+ if(owner)crewMeshes.push({name:object.name,owner:owner.name,role:owner.userData.crewRole,path:`/Root/Scenes/Scene/Object_${object.id}`});
+}
+await writeFile('outputs/native-crew-map.json',JSON.stringify(crewMeshes,null,2));
 const samples=new Map(meshes.map(o=>[o.id,[]]));const previous=new Map();
 function matrixText(matrix){const a=matrix.elements.map(n=>Number(n.toPrecision(10)));return `( ${[0,4,8,12].map(i=>`(${a.slice(i,i+4).join(', ')})`).join(', ')} )`;}
 // Preserve changing frames; collapse flat runs while retaining endpoints.

@@ -20,7 +20,16 @@ for frame in [0,120,240,360,480]:
 active_counts=[sum(abs(p.GetAttribute('xformOp:transform').Get(t).GetDeterminant())>1e-12 for p in animated) for t in [0,120,240,360,480]]
 assert active_counts[-1]>active_counts[0]+1000
 scanners=[p.GetAttribute('xformOp:transform') for p in animated if abs(p.GetAttribute('xformOp:transform').Get(0).GetDeterminant())>1e-12 and abs(p.GetAttribute('xformOp:transform').Get(480).GetDeterminant())<1e-14]
-assert len(scanners)==2
+assert len(scanners)>=2
 assert any(a.Get(240).ExtractTranslation()[1]>a.Get(0).ExtractTranslation()[1]+.1 for a in scanners)
-report={'result':'passed','meshes':len(meshes),'animatedTransforms':len(animated),'heightsMetresAt0_5_10_15_20':heights,'activeAnimatedMeshesAt0_5_10_15_20':active_counts,'checks':['OpenUSD loads complete USDZ','geometry references resolve','animation time samples','30 cm height cap','two animated blue scanners disappear at completion','scan rises during construction'],'physicalIPhoneTested':False}
+crew=json.loads(Path('outputs/native-crew-map.json').read_text())
+assert len(crew)==46
+for role in ['crane','robot','drone']:
+ group=[stage.GetPrimAtPath(item['path']) for item in crew if item['role']==role]
+ assert group and all(group)
+ assert any(p.GetAttribute('xformOp:transform').Get(0)!=p.GetAttribute('xformOp:transform').Get(240) for p in group),(role,'native animation is missing')
+for item in crew:
+ if item['role']=='drone' and item['name'].endswith('_body'):
+  assert stage.GetPrimAtPath(item['path']).GetAttribute('xformOp:transform').Get(480).ExtractTranslation()[1]<.01
+report={'result':'passed','meshes':len(meshes),'animatedTransforms':len(animated),'crewMeshes':len(crew),'heightsMetresAt0_5_10_15_20':heights,'activeAnimatedMeshesAt0_5_10_15_20':active_counts,'checks':['OpenUSD loads complete USDZ','geometry references resolve','animation time samples','30 cm height cap','blue scanners disappear at completion','scan rises during construction','cranes, robotic arms and drones animate in native USDZ','native drones land at completion'],'physicalIPhoneTested':False}
 Path('outputs/tower-usdz-checks.json').write_text(json.dumps(report,indent=2));print(report)

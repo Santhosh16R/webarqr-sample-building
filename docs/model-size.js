@@ -1,4 +1,5 @@
-// Full animation envelope, including the tower's plaza, measured at 24 fps.
+// Tower and plaza envelope; the surrounding construction crew has a wider footprint.
+// Full-scene checks keep all crew motion within the same 30 cm height cap.
 export const MODEL_WIDTH_M = 40.599998474121094;
 export const MODEL_HEIGHT_M = 165.64999997615814;
 export const MAX_HEIGHT_CM = 30;
