@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>WebAR simulated camera test</title><style>body{font:14px Arial;background:#e7e7e7;margin:20px}iframe{border:1px solid #aaa;width:390px;height:844px;background:white}button{padding:12px;margin:10px 10px 15px 0}#camera{display:none}pre{white-space:pre-wrap}</style></head>
+<body><h1>Simulated camera test</h1><p>This developer-only page uses a canvas stream. It never opens a hardware camera.</p><button id="toggle">Hide simulated marker</button><pre id="stream-status">Simulated camera ready</pre><iframe id="phone" src="../docs/" title="390-pixel phone preview" allow="camera"></iframe><canvas id="camera" width="720" height="880"></canvas><script type="module">
+const frame=document.querySelector('#phone');
+const canvas=document.querySelector('#camera');
+const ctx=canvas.getContext('2d');
+const image=new Image();image.src='../docs/assets/building-marker.png';await image.decode();
+let visible=true;
+function draw(){
+  ctx.fillStyle='#c2bdb4';ctx.fillRect(0,0,720,880);
+  if(visible){ctx.save();ctx.translate(360,440);ctx.transform(1,0,.13,.85,0,0);ctx.drawImage(image,-288,-352,576,704);ctx.restore();}
+  requestAnimationFrame(draw);
+}draw();
+function configure(){
+  frame.contentWindow.navigator.mediaDevices.getUserMedia=async()=>{
+    const stream=canvas.captureStream(15);
+    document.querySelector('#stream-status').textContent='Simulated stream live';
+    stream.getVideoTracks()[0].addEventListener('ended',()=>document.querySelector('#stream-status').textContent='Simulated stream ended');
+    const poll=setInterval(()=>{if(stream.getVideoTracks().every(track=>track.readyState==='ended')){document.querySelector('#stream-status').textContent='Simulated stream ended';clearInterval(poll);}},200);
+    return stream;
+  };
+}
+frame.addEventListener('load',configure);
+if(frame.contentDocument.readyState==='complete')configure();
+document.querySelector('#toggle').addEventListener('click',event=>{visible=!visible;event.target.textContent=visible?'Hide simulated marker':'Show simulated marker';});
+</script></body></html>

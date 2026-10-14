@@ -2,3 +2,5 @@
 *.glb binary
 *.png binary
 *.zip binary
+*.mind binary
+docs/vendor/** -whitespace linguist-vendored=true

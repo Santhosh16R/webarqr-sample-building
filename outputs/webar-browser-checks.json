@@ -1,0 +1,39 @@
+{
+  "glb": {
+    "meshes": 7,
+    "loaded": true
+  },
+  "orientation": {
+    "baseZ": -9.769962616701378e-16,
+    "height": 9.900000000000002
+  },
+  "marker": {
+    "targets": 1,
+    "bytes": 565051,
+    "width": 900,
+    "height": 1100
+  },
+  "recognition0": {
+    "matched": true,
+    "features": 130,
+    "trackingPoints": 15
+  },
+  "recognition12": {
+    "matched": true,
+    "features": 139,
+    "trackingPoints": 16
+  },
+  "threeIntegration": true,
+  "simulatedCamera": {
+    "acquisition": "passed",
+    "markerLoss": "passed",
+    "reacquisition": "passed",
+    "closeReleasesStream": "passed",
+    "restart": "passed",
+    "rotateResizeResetControls": "exercised",
+    "narrowFrameContentWidth": 375,
+    "narrowFrameHorizontalOverflow": false
+  },
+  "physicalPhoneCamera": "not tested",
+  "result": "passed"
+}

@@ -1,6 +1,10 @@
-# Webarqr sample building
+# Webarqr — image-tracked mobile WebAR
 
-A small, self-contained **three-storey commercial building** for testing a mobile WebAR project: a retail ground floor, two office floors, blue windows, an entrance canopy, and a flat roof.
+A mobile WebAR experience using **MindAR image tracking**, a custom printable marker, and a three-storey commercial building. Open the site on your phone, allow camera access, and point it at the marker to see the building anchored to the image.
+
+**[Phone testing, deployment, and WebAR setup instructions →](WEBAR.md)**
+
+The complete static application is in `docs/`. Publish that folder over HTTPS. Runtime dependencies and assets are included locally; no app installation or runtime CDN requests are needed.
 
 ![Building preview](outputs/sample-building-preview.png)
 
@@ -28,12 +32,16 @@ The GLB includes its geometry and materials. No external textures or companion f
 
 Start with a uniform scale of `0.08` for a model approximately 0.91 metres wide. The orientation and placement relative to an image marker must be configured in the consuming WebAR application.
 
-## Folder analysis
+## Project contents
 
-This repository contains the sample asset and its generation tools. It does **not** yet include a MindAR web application, compiled image target (`.mind`), camera flow, or GitHub Pages deployment setup.
+This repository includes the mobile WebAR application, a compiled image target (`.mind`), a matching printable marker, camera controls, and GitHub Pages setup instructions. It also retains the original asset and generation tools.
 
 | File | Purpose |
 | --- | --- |
+| `docs/` | Complete mobile WebAR website, marker, model, and pinned browser libraries |
+| `WEBAR.md` | Deployment, phone testing, marker replacement, and troubleshooting |
+| `tools/` | Local marker compiler and browser verification pages |
+| `scripts/` | Web asset preparation, checks, and download packaging |
 | `outputs/sample-building.glb` | Ready-to-use building model |
 | `outputs/sample-building-preview.png` | Orthographic preview generated from the same geometry |
 | `outputs/sample-building-validation.json` | Khronos validator report |

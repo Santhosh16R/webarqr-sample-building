@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f3f1e9">
+  <meta name="description" content="Bring a three-storey building into your space with image-tracked augmented reality. No app to install.">
+  <title>Webarqr — A new perspective</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}</script>
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div id="ar-stage" aria-hidden="true"></div>
+  <div id="landing">
+    <header class="site-header shell">
+      <a class="wordmark" href="./" aria-label="Webarqr home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m16 2 13 7.5v13L16 30 3 22.5v-13Z M3 9.5 16 17l13-7.5M16 17v13 M9.5 6 23 13.5v13"/></svg>webarqr<span class="wordmark-dot">.</span></a>
+      <a class="header-link" href="marker.html" target="_blank" rel="noopener">Get the marker <span aria-hidden="true">↗</span></a>
+    </header>
+    <main class="shell">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> A LITTLE SPACE TO EXPLORE</p>
+          <h1 id="hero-title">A building.<br>A whole new<br><em>perspective.</em></h1>
+          <p class="intro">Bring architecture off the screen and into your space. Point your camera at the marker and watch this building take shape.</p>
+          <div class="hero-actions">
+            <button id="start" class="button primary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6 9.5 3.5h5L16 6h4v14H4V6Z"/><circle cx="12" cy="12.5" r="3.5"/></svg><span id="start-label">Start camera</span><span aria-hidden="true">↗</span></button>
+            <a class="text-link" href="marker.html" target="_blank" rel="noopener">Open marker <span aria-hidden="true">↗</span></a>
+          </div>
+          <p class="microcopy">No app to install. Your camera stays on your device.</p>
+          <p id="launch-status" class="launch-status" role="status" aria-live="polite"></p>
+          <noscript><p class="launch-status error">Enable JavaScript to start the AR experience.</p></noscript>
+        </div>
+        <div class="model-card">
+          <div class="card-heading"><span class="pill">THE FIRST EDITION</span><span class="card-number">01 / 01</span></div>
+          <div class="model-image"><img src="assets/building-preview.png" alt="Three-storey commercial building with blue windows, a teal shop canopy and a flat roof" width="1200" height="1200" fetchpriority="high"></div>
+          <div class="model-caption"><div><p>Corner House</p><span>Commercial / Three storeys</span></div><span class="model-badge">3D → AR</span></div>
+          <span class="coordinate" aria-hidden="true">X &nbsp; Y &nbsp; Z / IN YOUR SPACE</span>
+        </div>
+      </section>
+      <section class="how-it-works" aria-labelledby="how-title">
+        <div class="section-heading"><p class="eyebrow">FROM SCREEN TO SPACE</p><h2 id="how-title">Three steps. One new view.</h2></div>
+        <ol class="steps">
+          <li><span class="step-number">01</span><div><h3>Set the scene</h3><p><a href="marker.html" target="_blank" rel="noopener">Open the marker</a> on another screen, or print it. Place it flat in good light.</p></div></li>
+          <li><span class="step-number">02</span><div><h3>Point your camera</h3><p>Tap Start camera and allow camera access. Fit the whole marker in view.</p></div></li>
+          <li><span class="step-number">03</span><div><h3>Find a new angle</h3><p>Move your phone slowly around the marker. Resize or turn the building as you explore.</p></div></li>
+        </ol>
+      </section>
+      <section class="help"><details><summary>A little help getting started <span aria-hidden="true">+</span></summary><div><p>Use Safari on iPhone or Chrome on Android. Open this page directly in your browser rather than inside a messaging app.</p><p>If the camera is blocked, allow access in your browser’s site settings and try again. Keep the marker fully visible, avoid glare, and start around 30–60 cm away.</p><p>The marker must be on paper or a second screen. Your phone cannot scan a marker displayed on its own screen.</p></div></details></section>
+    </main>
+    <footer class="shell"><span>Built for a different point of view.</span><span>WEBARQR / IMAGE-TRACKED AR</span></footer>
+  </div>
+  <section id="ar-ui" class="ar-ui" aria-label="AR controls" hidden>
+    <div class="ar-top"><div class="ar-brand">webarqr.</div><button id="stop" class="glass-button">Close camera <span aria-hidden="true">×</span></button></div>
+    <div id="tracking-status" class="tracking-status" role="status" aria-live="polite">Looking for the marker</div>
+    <div id="scan-guide" class="scan-guide" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div class="ar-bottom">
+      <p id="scan-hint">Fit the whole marker in view. Hold steady.</p>
+      <div class="control-panel"><label for="size">Building size</label><input id="size" type="range" min="0.025" max="0.09" step="0.005" value="0.05"><div class="control-buttons"><button id="rotate" class="glass-button">Rotate 90°</button><button id="reset" class="glass-button">Reset view</button></div></div>
+    </div>
+  </section>
+</body>
+</html>

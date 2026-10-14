@@ -2,11 +2,15 @@
   "name": "webarqr-sample-building",
   "version": "1.0.0",
   "private": true,
-  "description": "A self-contained three-storey commercial building GLB sample with generation and validation tools.",
+  "description": "Mobile image-tracked WebAR with MindAR, a three-storey building, and a printable marker.",
   "scripts": {
     "build": "python outputs/build_sample.py",
     "validate": "node outputs/validate_glb.cjs",
-    "package": "python outputs/package_sample.py"
+    "package": "python outputs/package_sample.py",
+    "web:serve": "python -m http.server 8000 --directory docs --bind 127.0.0.1",
+    "web:assets": "python scripts/prepare_web_assets.py",
+    "web:check": "python scripts/check_web_assets.py",
+    "web:package": "python scripts/package_web.py"
   },
   "devDependencies": {
     "gltf-validator": "2.0.0-dev.3.10"

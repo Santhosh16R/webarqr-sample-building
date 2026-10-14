@@ -1,0 +1,50 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>WebAR verification</title><script type="importmap">{"imports":{"three":"../docs/vendor/three/three.module.js","three/addons/":"../docs/vendor/three/addons/"}}</script></head><body><h1>WebAR verification</h1><button id="verify">Verify model and tracking</button><pre id="result" role="status">Ready</pre><canvas id="input" width="720" height="880" style="width:240px"></canvas><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {Compiler,Controller} from '../docs/vendor/mindar/mindar-image.prod.js';
+import {MindARThree} from '../docs/vendor/mindar/mindar-image-three.prod.js';
+document.querySelector('#verify').addEventListener('click', async () => {
+  const result = document.querySelector('#result');
+  const checks = {};
+  let controller;
+  document.querySelector('#verify').disabled = true;
+  try {
+    result.textContent = 'Loading model and compiled target…';
+    const model = await new GLTFLoader().loadAsync('../docs/assets/sample-building.glb');
+    let meshes=0; model.scene.traverse(object => {if(object.isMesh) meshes++;});
+    if(meshes!==7) throw new Error(`Unexpected mesh count: ${meshes}`);
+    checks.glb={meshes,loaded:true};
+    const rotated = new THREE.Group(); rotated.rotation.x=Math.PI/2; rotated.add(model.scene);
+    const bounds = new THREE.Box3().setFromObject(rotated);
+    if(bounds.min.z < -0.001 || bounds.max.z < 9) throw new Error('Model must extend outward from the marker');
+    checks.orientation={baseZ:bounds.min.z,height:bounds.max.z};
+    const response=await fetch('../docs/assets/building-targets.mind');
+    const buffer=await response.arrayBuffer();
+    const entries=new Compiler().importData(buffer);
+    if(entries.length!==1 || entries[0].targetImage.width!==900 || entries[0].targetImage.height!==1100) throw new Error('Incorrect compiled marker');
+    checks.marker={targets:entries.length,bytes:buffer.byteLength,width:900,height:1100};
+    const image=new Image(); image.src='../docs/assets/building-marker.png'; await image.decode();
+    const canvas=document.querySelector('#input'); const context=canvas.getContext('2d');
+    controller=new Controller({inputWidth:canvas.width,inputHeight:canvas.height,maxTrack:1});
+    controller.addImageTargetsFromBuffer(buffer);
+    for(const angle of [0,12]) {
+      result.textContent=`Testing marker recognition at ${angle} degrees…`;
+      context.fillStyle='white'; context.fillRect(0,0,canvas.width,canvas.height);
+      context.save(); context.translate(canvas.width/2,canvas.height/2); context.rotate(angle*Math.PI/180);
+      context.drawImage(image,-canvas.width*.4,-canvas.height*.4,canvas.width*.8,canvas.height*.8); context.restore();
+      const {featurePoints}=await controller.detect(canvas);
+      const {modelViewTransform}=await controller.match(featurePoints,0);
+      if(!modelViewTransform) throw new Error(`Marker matching failed at ${angle} degrees`);
+      const tracked=await controller.track(canvas,modelViewTransform,0);
+      if(tracked.worldCoords.length<4) throw new Error('Not enough tracking points');
+      checks[`recognition${angle}`]={matched:true,features:featurePoints.length,trackingPoints:tracked.worldCoords.length};
+    }
+    checks.threeIntegration=typeof MindARThree==='function';
+    checks.result='passed';
+    const saved=await fetch('/__save-test-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(checks,null,2)});
+    if(!saved.ok) throw new Error('Could not save report');
+    result.textContent='PASS\n'+JSON.stringify(checks,null,2);
+  }catch(error){result.textContent='FAIL: '+error.message+'\n'+JSON.stringify(checks,null,2);}
+  finally{controller?.dispose();document.querySelector('#verify').disabled=false;}
+});
+</script></body></html>

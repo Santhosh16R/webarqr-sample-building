@@ -1,0 +1,19 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Compile building marker</title></head>
+<body><h1>Compile building marker</h1><button id="compile">Compile marker</button><p id="status" role="status">Ready</p><script type="module">
+import { Compiler } from '../docs/vendor/mindar/mindar-image.prod.js';
+document.querySelector('#compile').addEventListener('click', async () => {
+  const button = document.querySelector('#compile');
+  const status = document.querySelector('#status');
+  button.disabled = true;
+  try {
+    const image = new Image(); image.src = '../docs/assets/building-marker.png'; await image.decode();
+    const compiler = new Compiler();
+    await compiler.compileImageTargets([image], progress => status.textContent = `Compiling: ${Math.round(progress)}%`);
+    const buffer = await compiler.exportData();
+    const response = await fetch('/__save-target', {method:'POST', body:buffer});
+    if (!response.ok) throw new Error(await response.text());
+    status.textContent = `Success: saved ${buffer.byteLength} bytes`;
+  } catch (error) { status.textContent = `Failed: ${error.message}`; }
+  button.disabled = false;
+});
+</script></body></html>
