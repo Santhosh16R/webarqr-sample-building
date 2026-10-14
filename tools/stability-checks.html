@@ -1,0 +1,31 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Tracking stability checks</title><script type="importmap">{"imports":{"three":"../docs/vendor/three/three.module.js"}}</script></head><body><h1>Tracking stability checks</h1><button id="check">Run stability checks</button><pre id="result" role="status">Ready</pre><script type="module">
+import * as THREE from 'three';
+import {createPoseStabilizer} from '../docs/pose-stabilizer.js';
+document.querySelector('#check').addEventListener('click',()=>{
+  const result=document.querySelector('#result');
+  try{
+    const output=new THREE.Group();const filter=createPoseStabilizer(output);
+    const matrix=new THREE.Matrix4();const scale=new THREE.Vector3(900,900,900);
+    const p=new THREE.Vector3(0,0,-1400);const q=new THREE.Quaternion();
+    const pose=(x,angle=0)=>matrix.compose(p.clone().setX(x),q.clone().setFromAxisAngle(new THREE.Vector3(0,1,0),angle),scale);
+    filter.update(pose(0),1/30,true);
+    for(let i=0;i<60;i++)filter.update(pose(i%2?1:-1,i%2?.003:-.003),1/30,true);
+    if(output.position.x!==0||output.quaternion.angleTo(new THREE.Quaternion())>.000001)throw new Error('Stationary noise must stay inside the deadband');
+    let raw=0,smoothed=0;
+    for(let i=0;i<300;i++){
+      const noise=9*Math.sin(i*2.3)+3*Math.cos(i*.9);
+      filter.update(pose(noise),1/30,true);
+      if(i>30){raw+=noise*noise;smoothed+=output.position.x*output.position.x;}
+    }
+    const reduction=1-Math.sqrt(smoothed/raw);
+    if(reduction<.5)throw new Error('Expected at least 50% reduction in this synthetic jitter test');
+    for(let i=0;i<30;i++)filter.update(pose(180,.5),1/30,true);
+    if(Math.abs(output.position.x-180)>2.3||output.quaternion.angleTo(q.clone().setFromAxisAngle(new THREE.Vector3(0,1,0),.5))>.007)throw new Error('The building must still follow deliberate movement');
+    filter.update(matrix,1/30,false);if(output.visible)throw new Error('Lost markers must hide the model');
+    filter.update(pose(-300),1/30,true);if(output.position.x!==-300||!output.visible)throw new Error('Reacquisition must snap to the new valid pose');
+    const saved=output.position.clone();matrix.elements[0]=NaN;filter.update(matrix,1/30,true);
+    if(!output.position.equals(saved))throw new Error('Invalid poses must not corrupt the model');
+    result.textContent=`PASS: stationary deadband, ${Math.round(reduction*100)}% synthetic jitter reduction, deliberate movement, loss/reacquisition and invalid-pose rejection.`;
+  }catch(error){result.textContent='FAIL: '+error.message;}
+});
+</script></body></html>

@@ -44,6 +44,14 @@
     "smoothRotation": "passed",
     "cumulativeTurnsAndReset": "passed"
   },
+  "trackingStabilization": {
+    "stationaryDeadband": "passed",
+    "syntheticJitterReductionPercent": 81,
+    "deliberateCameraMovement": "passed",
+    "markerLossAndReacquisition": "passed",
+    "invalidPoseRejection": "passed",
+    "note": "Synthetic test result, not a measurement on a physical phone"
+  },
   "physicalPhoneCamera": "not tested",
   "result": "passed"
 }

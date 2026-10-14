@@ -2,11 +2,14 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MindARThree} from './vendor/mindar/mindar-image-three.prod.js';
 import {createBuildingEffects,createRotationControls} from './building-effects.js?v=20261014-blue';
+import {createPoseStabilizer} from './pose-stabilizer.js?v=20261014-stable';
 
 let engine;
 let building;
 let pivot;
 let anchor;
+let stableAnchor;
+let poseStabilizer;
 let construction;
 let lastFrame;
 let rotationControls;
@@ -25,7 +28,7 @@ async function prepare(container) {
   await response.arrayBuffer();
   try {
     engine = new MindARThree({container, imageTargetSrc:assetURL('building-targets.mind'), maxTrack:1,
-      uiLoading:'no', uiScanning:'no', uiError:'no', filterMinCF:0.001, filterBeta:1000, warmupTolerance:5, missTolerance:8});
+      uiLoading:'no', uiScanning:'no', uiError:'no', filterMinCF:0.0005, filterBeta:100, warmupTolerance:5, missTolerance:8});
   } catch {
     throw new Error('This browser could not start 3D graphics. Try Safari on iPhone or Chrome on Android.');
   }
@@ -35,6 +38,9 @@ async function prepare(container) {
   sun.position.set(2,3,5);
   engine.scene.add(sun);
   anchor = engine.addAnchor(0);
+  stableAnchor = new THREE.Group();
+  engine.scene.add(stableAnchor);
+  poseStabilizer = createPoseStabilizer(stableAnchor);
   anchor.onTargetFound = () => reportTracking(true);
   anchor.onTargetLost = () => reportTracking(false);
   // The marker lies in XY; turn the model's Y-up axis outward along +Z.
@@ -46,7 +52,7 @@ async function prepare(container) {
   construction = createBuildingEffects(building, {reducedMotion:window.matchMedia('(prefers-reduced-motion: reduce)').matches});
   pivot.add(building);
   ground.add(pivot);
-  anchor.group.add(ground);
+  stableAnchor.add(ground);
   reset();
 }
 
@@ -79,10 +85,12 @@ export async function start(container, onProgress, onTracking) {
     })]);
     if (id !== runId) throw new Error('Camera startup was cancelled. Please try again.');
     replay();
+    poseStabilizer.reset();
     lastFrame = undefined;
     engine.renderer.setAnimationLoop(time => {
       const seconds = lastFrame === undefined ? 0 : Math.min((time-lastFrame)/1000, .1);
       lastFrame = time;
+      poseStabilizer.update(anchor.group.matrix,seconds,anchor.group.visible);
       if (anchor.group.visible) construction.update(seconds);
       rotationControls.update(seconds);
       engine.renderer.render(engine.scene,engine.camera);
@@ -112,6 +120,7 @@ function cleanup() {
     video.remove();
   }
   if (anchor) {anchor.group.visible = false; anchor.visible = false;}
+  poseStabilizer?.reset();
 }
 export function stop() {++runId; if (cameraPending) needsReload = true; cleanup();}
 export function setScale(value) {if (building) building.scale.setScalar(THREE.MathUtils.clamp(value, .025, .09));}

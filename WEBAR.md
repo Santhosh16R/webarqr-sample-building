@@ -18,6 +18,8 @@ The marker must be on paper or another screen; a phone cannot scan an image disp
 
 Camera frames are processed locally in the browser. This application does not record or upload them. Runtime libraries and assets are served from the same site; no analytics or runtime CDN dependencies are included.
 
+Tracking uses additional position/quaternion smoothing and a small stationary deadband to reduce shake. This introduces a slight follow delay during camera movement. A sharp, flat printed marker in even light gives better results than a reflective screen. Keep the full marker visible and move slowly; smoothing cannot recover tracking features hidden by glare, blur or occlusion.
+
 ## Publish with GitHub Pages
 
 For `Santhosh16R/webarqr-sample-building`, the live Pages URL is:
@@ -81,6 +83,7 @@ For WebAR development, run `python tools/preview_server.py` and open:
 
 - `/tools/verify.html` — loads the real GLB, checks its orientation, imports the compiled target, and verifies image matching and tracking points at two angles.
 - `/tools/lifecycle.html` — runs the real application in a narrow frame with a synthetic canvas camera, without accessing a hardware camera. Use it to check acquisition, loss, reacquisition, camera close/restart, and controls.
+- `/tools/stability-checks.html` — tests stationary pose noise, deliberate movement, marker loss/reacquisition and invalid-pose rejection. Its noise-reduction number is synthetic and does not predict a particular phone's result.
 
 Browser checks do not replace a physical iPhone/Android test. Test camera permission denied/allowed, marker acquisition in daylight, marker loss and reacquisition, portrait/landscape, resizing/rotation, closing/reopening the camera, and returning after switching apps. Performance varies with the phone, lighting, and printed marker quality.
 

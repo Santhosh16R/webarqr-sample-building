@@ -31,7 +31,7 @@ startButton.addEventListener('click', async () => {
   startLabel.textContent = 'Getting ready…';
   setStatus('Loading the building and preparing your camera…');
   try {
-    runtime ??= await import('./ar.js?v=20261014-blue');
+    runtime ??= await import('./ar.js?v=20261014-stable');
     await runtime.start(stage, message => setStatus(message), found => {
       const status = document.querySelector('#tracking-status');
       status.textContent = found ? 'Marker found · building in view' : 'Looking for the marker';
