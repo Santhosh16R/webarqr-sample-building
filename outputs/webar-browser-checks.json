@@ -34,6 +34,16 @@
     "narrowFrameContentWidth": 375,
     "narrowFrameHorizontalOverflow": false
   },
+  "constructionAnimation": {
+    "groundUpReveal": "passed",
+    "smoothRiseAndSettling": "passed",
+    "blueShadersLinked": "passed",
+    "replay": "passed",
+    "durationSeconds": 4.8,
+    "independentXAndYQuarterTurns": "passed",
+    "smoothRotation": "passed",
+    "cumulativeTurnsAndReset": "passed"
+  },
   "physicalPhoneCamera": "not tested",
   "result": "passed"
 }

@@ -11,7 +11,8 @@ The application is in `docs/`, ready for HTTPS static hosting or GitHub Pages. T
 3. Place the marker flat in even light. Avoid glare on the paper or second screen.
 4. On your phone, tap **Start camera** and allow camera access.
 5. Frame the whole marker from about 30–60 cm away. Move slowly until the building appears.
-6. Use **Building size**, **Rotate 90°**, or **Reset view** to explore it. **Close camera** releases the camera. Leaving the page also pauses the experience.
+6. The building rises smoothly from the ground with a blue scan ring, illuminated edges, and blue window lights. The reveal takes about five seconds and pauses if the marker is lost.
+7. Use **Building size**, **Rotate X 90°**, or **Rotate Y 90°** to explore it. **Replay build** repeats the construction reveal; **Reset view** restores both rotation axes and the default size. **Close camera** releases the camera. Leaving the page also pauses the experience.
 
 The marker must be on paper or another screen; a phone cannot scan an image displayed on its own screen.
 

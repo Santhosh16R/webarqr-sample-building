@@ -1,0 +1,43 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Construction animation checks</title><script type="importmap">{"imports":{"three":"../docs/vendor/three/three.module.js","three/addons/":"../docs/vendor/three/addons/"}}</script><style>body{font:15px Arial;background:#102333;color:white;padding:20px}button{padding:14px;margin:10px}canvas{max-width:100%}pre{white-space:pre-wrap}</style></head><body><h1>Blue construction reveal</h1><button id="check">Run animation checks</button><button id="replay">Replay animation</button><pre id="result" role="status">Loading model…</pre><div id="view"></div><script type="module">
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {createBuildingEffects,createRotationControls} from '../docs/building-effects.js';
+const model=(await new GLTFLoader().loadAsync('../docs/assets/sample-building.glb')).scene;
+const effects=createBuildingEffects(model);
+const scene=new THREE.Scene();scene.add(model);scene.add(new THREE.HemisphereLight(0xffffff,0x475f68,1.35));
+const sun=new THREE.DirectionalLight(0xffffff,1.2);sun.position.set(2,3,5);scene.add(sun);
+const camera=new THREE.PerspectiveCamera(40,1.2,.1,100);camera.position.set(17,13,19);camera.lookAt(0,4,0);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});renderer.outputEncoding=THREE.sRGBEncoding;renderer.setSize(720,600);document.querySelector('#view').append(renderer.domElement);
+let playing=false,last;
+renderer.setAnimationLoop(time=>{if(playing&&last!==undefined)effects.update(Math.min((time-last)/1000,.1));last=time;renderer.render(scene,camera);});
+document.querySelector('#result').textContent='Ready';
+document.querySelector('#replay').addEventListener('click',()=>{effects.replay();playing=true;last=undefined;});
+document.querySelector('#check').addEventListener('click',()=>{
+  try{
+    playing=false;effects.replay();const initial=effects.state;
+    effects.update(1.2);const early=effects.state;
+    effects.update(1.2);const middle=effects.state;
+    effects.update(2.4);const end=effects.state;
+    if(!(initial.height<0&&early.height>0&&middle.height>early.height&&end.height>9.9))throw new Error('Reveal must rise monotonically through all three storeys');
+    if(end.progress!==1||end.risingY!==0||end.scanVisible)throw new Error('Construction must settle completely');
+    renderer.render(scene,camera);
+    const gl=renderer.getContext();
+    if(!renderer.info.programs.every(program=>gl.getProgramParameter(program.program,gl.LINK_STATUS)))throw new Error('A construction shader failed to link');
+    if(gl.getError()!==gl.NO_ERROR)throw new Error('WebGL reported an error');
+    effects.replay();if(effects.state.progress!==0)throw new Error('Replay did not restart construction');
+    const pivot=new THREE.Group();const rotation=createRotationControls(pivot);
+    rotation.rotate('x');rotation.update(.07);
+    if(!(pivot.rotation.x>0&&pivot.rotation.x<Math.PI/2))throw new Error('X rotation must ease smoothly');
+    rotation.update(3);
+    if(pivot.rotation.x!==Math.PI/2||pivot.rotation.y!==0)throw new Error('X must turn exactly 90 degrees independently');
+    rotation.rotate('y');rotation.update(3);
+    if(pivot.rotation.y!==Math.PI/2||pivot.rotation.x!==Math.PI/2)throw new Error('Y must turn exactly 90 degrees independently');
+    rotation.reset();rotation.update(3);
+    if(pivot.rotation.x!==0||pivot.rotation.y!==0)throw new Error('Reset must restore both axes');
+    for(let i=0;i<4;i++)rotation.rotate('y');rotation.update(3);
+    if(pivot.rotation.y!==Math.PI*2)throw new Error('Repeated clicks must accumulate full quarter turns');
+    document.querySelector('#result').textContent='PASS: ground-up reveal, smooth rise, completed building, linked blue-light shaders, replay, independent X/Y 90-degree turns, cumulative turns and reset.\n'+JSON.stringify({initial,early,middle,end},null,2);
+    playing=true;last=undefined;
+  }catch(error){document.querySelector('#result').textContent='FAIL: '+error.message;}
+});
+</script></body></html>

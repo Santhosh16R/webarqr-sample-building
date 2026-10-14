@@ -26,7 +26,7 @@ for source in web.glob('*.html'):
     Links(source).feed(source.read_text(encoding='utf-8'))
 for source in web.rglob('*.js'):
     text=source.read_text(encoding='utf-8')
-    for relative in re.findall(r'''\b(?:from\s*|import\s*(?:\(\s*)?)["'](\.[^"']+\.js)["']''',text):
+    for relative in re.findall(r'''\b(?:from\s*|import\s*(?:\(\s*)?)["'](\.[^"']+\.js(?:\?[^"']*)?)["']''',text):
         exists_relative(source,relative)
 model=(web/'assets/sample-building.glb').read_bytes()
 assert model==(ROOT/'outputs/sample-building.glb').read_bytes()

@@ -1,11 +1,15 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MindARThree} from './vendor/mindar/mindar-image-three.prod.js';
+import {createBuildingEffects,createRotationControls} from './building-effects.js?v=20261014-blue';
 
 let engine;
 let building;
 let pivot;
 let anchor;
+let construction;
+let lastFrame;
+let rotationControls;
 let needsReload = false;
 let cameraPending = false;
 let runId = 0;
@@ -37,7 +41,9 @@ async function prepare(container) {
   const ground = new THREE.Group();
   ground.rotation.x = Math.PI / 2;
   pivot = new THREE.Group();
+  rotationControls = createRotationControls(pivot);
   building = gltf.scene;
+  construction = createBuildingEffects(building, {reducedMotion:window.matchMedia('(prefers-reduced-motion: reduce)').matches});
   pivot.add(building);
   ground.add(pivot);
   anchor.group.add(ground);
@@ -72,7 +78,15 @@ export async function start(container, onProgress, onTracking) {
       }, 60000);
     })]);
     if (id !== runId) throw new Error('Camera startup was cancelled. Please try again.');
-    engine.renderer.setAnimationLoop(() => engine.renderer.render(engine.scene,engine.camera));
+    replay();
+    lastFrame = undefined;
+    engine.renderer.setAnimationLoop(time => {
+      const seconds = lastFrame === undefined ? 0 : Math.min((time-lastFrame)/1000, .1);
+      lastFrame = time;
+      if (anchor.group.visible) construction.update(seconds);
+      rotationControls.update(seconds);
+      engine.renderer.render(engine.scene,engine.camera);
+    });
   } catch (error) {
     stop();
     throw error || new Error('Camera access was blocked or no camera was found. Allow camera access in site settings, then try again.');
@@ -101,5 +115,6 @@ function cleanup() {
 }
 export function stop() {++runId; if (cameraPending) needsReload = true; cleanup();}
 export function setScale(value) {if (building) building.scale.setScalar(THREE.MathUtils.clamp(value, .025, .09));}
-export function rotate() {if (pivot) pivot.rotation.y += Math.PI/2;}
-export function reset() {if (pivot) pivot.rotation.y = 0; setScale(.05);}
+export function rotate(axis = 'y') {rotationControls?.rotate(axis);}
+export function replay() {construction?.replay();}
+export function reset() {rotationControls?.reset(); setScale(.05);}

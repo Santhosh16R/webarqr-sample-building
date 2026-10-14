@@ -31,7 +31,7 @@ startButton.addEventListener('click', async () => {
   startLabel.textContent = 'Getting ready…';
   setStatus('Loading the building and preparing your camera…');
   try {
-    runtime ??= await import('./ar.js');
+    runtime ??= await import('./ar.js?v=20261014-blue');
     await runtime.start(stage, message => setStatus(message), found => {
       const status = document.querySelector('#tracking-status');
       status.textContent = found ? 'Marker found · building in view' : 'Looking for the marker';
@@ -61,7 +61,9 @@ startButton.addEventListener('click', async () => {
 });
 document.querySelector('#stop').addEventListener('click', () => leaveAR('Camera closed. Ready when you are.'));
 document.querySelector('#size').addEventListener('input', event => runtime?.setScale(Number(event.target.value)));
-document.querySelector('#rotate').addEventListener('click', () => runtime?.rotate());
+document.querySelector('#rotate-x').addEventListener('click', () => runtime?.rotate('x'));
+document.querySelector('#rotate-y').addEventListener('click', () => runtime?.rotate('y'));
+document.querySelector('#replay').addEventListener('click', () => runtime?.replay());
 document.querySelector('#reset').addEventListener('click', () => {
   runtime?.reset();
   document.querySelector('#size').value = '0.05';
