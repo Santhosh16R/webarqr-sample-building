@@ -19,11 +19,11 @@ Camera frames are processed locally in the browser. This application does not re
 
 ## Publish with GitHub Pages
 
-For `Santhosh16R/webarqr-sample-building`, the intended Pages URL is:
+For `Santhosh16R/webarqr-sample-building`, the live Pages URL is:
 
-`https://santhosh16r.github.io/webarqr-sample-building/`
+[Open the WebAR page](https://santhosh16r.github.io/webarqr-sample-building/) · [Open or print the marker](https://santhosh16r.github.io/webarqr-sample-building/marker.html)
 
-That URL works only after Pages has been enabled and its deployment has succeeded.
+The site is published from `main` → `/docs`. To reproduce this deployment in another repository:
 
 1. Push the complete repository to GitHub.
 2. In **Settings → Pages**, select **Deploy from a branch**.

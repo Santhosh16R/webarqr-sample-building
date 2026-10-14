@@ -4,6 +4,8 @@ A mobile WebAR experience using **MindAR image tracking**, a custom printable ma
 
 **[Phone testing, deployment, and WebAR setup instructions →](WEBAR.md)**
 
+**[Open WebAR on your phone](https://santhosh16r.github.io/webarqr-sample-building/)** · **[Open or print the marker](https://santhosh16r.github.io/webarqr-sample-building/marker.html)**
+
 The complete static application is in `docs/`. Publish that folder over HTTPS. Runtime dependencies and assets are included locally; no app installation or runtime CDN requests are needed.
 
 ![Building preview](outputs/sample-building-preview.png)

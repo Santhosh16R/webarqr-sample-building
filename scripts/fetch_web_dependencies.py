@@ -9,6 +9,7 @@ files = {
     'docs/vendor/mindar/mindar-image-three.prod.js': 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image-three.prod.js',
     'docs/vendor/mindar/mindar-image.prod.js': 'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js',
     'docs/vendor/mindar/LICENSE': 'https://raw.githubusercontent.com/hiukim/mind-ar-js/v1.2.5/LICENSE',
+    'docs/vendor/mindar/LICENSE-APACHE-2.0.txt': 'https://www.apache.org/licenses/LICENSE-2.0.txt',
     'docs/vendor/three/three.module.js': 'https://cdn.jsdelivr.net/npm/three@0.147.0/build/three.module.js',
     'docs/vendor/three/addons/loaders/GLTFLoader.js': 'https://cdn.jsdelivr.net/npm/three@0.147.0/examples/jsm/loaders/GLTFLoader.js',
     'docs/vendor/three/addons/utils/BufferGeometryUtils.js': 'https://cdn.jsdelivr.net/npm/three@0.147.0/examples/jsm/utils/BufferGeometryUtils.js',
