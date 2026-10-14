@@ -3,4 +3,5 @@
 *.png binary
 *.zip binary
 *.mind binary
+*.usdz binary
 docs/vendor/** -whitespace linguist-vendored=true

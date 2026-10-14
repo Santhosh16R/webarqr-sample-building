@@ -7,9 +7,9 @@
   <meta name="description" content="Bring a three-storey building into your space with image-tracked augmented reality. No app to install.">
   <title>Webarqr — A new perspective</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261014-blue">
+  <link rel="stylesheet" href="styles.css?v=20261014-floor">
   <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}</script>
-  <script type="module" src="app.js?v=20261014-stable"></script>
+  <script type="module" src="app.js?v=20261014-floor"></script>
 </head>
 <body>
   <div id="ar-stage" aria-hidden="true"></div>
@@ -23,11 +23,13 @@
         <div class="hero-copy">
           <p class="eyebrow"><span></span> A LITTLE SPACE TO EXPLORE</p>
           <h1 id="hero-title">A building.<br>A whole new<br><em>perspective.</em></h1>
-          <p class="intro">Bring architecture off the screen and into your space. Point your camera at the marker and watch this building take shape.</p>
+          <p class="intro">Bring architecture off the screen and into your space. Scan a marker, then place a larger building on the floor nearby—or go straight to floor placement.</p>
           <div class="hero-actions">
             <button id="start" class="button primary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6 9.5 3.5h5L16 6h4v14H4V6Z"/><circle cx="12" cy="12.5" r="3.5"/></svg><span id="start-label">Start camera</span><span aria-hidden="true">↗</span></button>
             <a class="text-link" href="marker.html" target="_blank" rel="noopener">Open marker <span aria-hidden="true">↗</span></a>
           </div>
+          <div class="floor-actions"><button id="floor-start" class="button secondary" disabled>Checking floor support…</button><a id="native-floor" class="button secondary" href="assets/floor-building.usdz" hidden><img src="assets/building-preview.png" width="22" height="22" alt="">Native floor viewer</a></div>
+          <p id="floor-support" class="microcopy" role="status">Checking this browser’s floor-placement support.</p>
           <p class="microcopy">No app to install. Your camera stays on your device.</p>
           <p id="launch-status" class="launch-status" role="status" aria-live="polite"></p>
           <noscript><p class="launch-status error">Enable JavaScript to start the AR experience.</p></noscript>
@@ -42,9 +44,9 @@
       <section class="how-it-works" aria-labelledby="how-title">
         <div class="section-heading"><p class="eyebrow">FROM SCREEN TO SPACE</p><h2 id="how-title">Three steps. One new view.</h2></div>
         <ol class="steps">
-          <li><span class="step-number">01</span><div><h3>Set the scene</h3><p><a href="marker.html" target="_blank" rel="noopener">Open the marker</a> on another screen, or print it. Place it flat in good light.</p></div></li>
-          <li><span class="step-number">02</span><div><h3>Point your camera</h3><p>Tap Start camera and allow camera access. Fit the whole marker in view.</p></div></li>
-          <li><span class="step-number">03</span><div><h3>Find a new angle</h3><p>Move your phone slowly around the marker. Resize or turn the building as you explore.</p></div></li>
+          <li><span class="step-number">01</span><div><h3>Scan, or place directly</h3><p><a href="marker.html" target="_blank" rel="noopener">Show the marker</a> vertically on paper or a second screen. Or start with Place on floor.</p></div></li>
+          <li><span class="step-number">02</span><div><h3>Find the ground nearby</h3><p>After scanning, choose Place on floor nearby. Aim at a clear floor and wait for the blue ring.</p></div></li>
+          <li><span class="step-number">03</span><div><h3>Build in your space</h3><p>Tap Place building. It rises at the chosen spot without needing the marker in view. Native viewers use their own placement controls.</p></div></li>
         </ol>
       </section>
       <section class="help"><details><summary>A little help getting started <span aria-hidden="true">+</span></summary><div><p>Use Safari on iPhone or Chrome on Android. Open this page directly in your browser rather than inside a messaging app.</p><p>If the camera is blocked, allow access in your browser’s site settings and try again. Keep the marker fully visible, avoid glare, and start around 30–60 cm away.</p><p>The marker must be on paper or a second screen. Your phone cannot scan a marker displayed on its own screen.</p></div></details></section>
@@ -57,7 +59,8 @@
     <div id="scan-guide" class="scan-guide" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
     <div class="ar-bottom">
       <p id="scan-hint">Fit the whole marker in view. Hold steady.</p>
-      <div class="control-panel"><label for="size">Building size</label><input id="size" type="range" min="0.025" max="0.09" step="0.005" value="0.05"><div class="control-buttons"><button id="rotate-x" class="glass-button">Rotate X 90°</button><button id="rotate-y" class="glass-button">Rotate Y 90°</button><button id="replay" class="glass-button">Replay build</button><button id="reset" class="glass-button">Reset view</button></div></div>
+      <div class="floor-ar-actions"><button id="switch-floor" class="glass-button" hidden disabled>Place on floor nearby</button><a id="native-floor-marker" class="glass-button" href="assets/floor-building.usdz" hidden><img src="assets/building-preview.png" width="18" height="18" alt="">Place on floor · native viewer</a><button id="place-floor" class="glass-button" hidden disabled>Place building</button><button id="move-floor" class="glass-button" hidden>Move building</button></div>
+      <div class="control-panel"><label for="size">Building size · up to 4.6× marker width</label><input id="size" type="range" min="0.04" max="0.4" step="0.01" value="0.14"><div class="control-buttons"><button id="rotate-x" class="glass-button">Rotate X 90°</button><button id="rotate-y" class="glass-button">Rotate Y 90°</button><button id="replay" class="glass-button">Replay build</button><button id="reset" class="glass-button">Reset view</button></div></div>
     </div>
   </section>
 </body>

@@ -2,6 +2,7 @@
 import json
 import re
 import struct
+from zipfile import ZipFile,ZIP_STORED
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urlsplit,unquote
@@ -35,4 +36,21 @@ assert (web/'assets/building-targets.mind').stat().st_size>1000
 report=json.loads((ROOT/'outputs/webar-browser-checks.json').read_text())
 assert report['result']=='passed'
 assert report['marker']['bytes']==(web/'assets/building-targets.mind').stat().st_size
+native=(web/'assets/floor-building.glb').read_bytes()
+assert struct.unpack('<4sII',native[:12])==(b'glTF',2,len(native))
+native_json=json.loads(native[20:20+struct.unpack_from('<I',native,12)[0]])
+assert abs(native_json['nodes'][0]['scale'][0]*11.4-2)<.00001
+with ZipFile(web/'assets/floor-building.usdz') as archive:
+    assert archive.testzip() is None
+    assert archive.namelist()[0]=='model.usda'
+    stage=archive.read('model.usda').decode()
+    assert 'metersPerUnit = 1' in stage and 'upAxis = "Y"' in stage
+    assert 'preliminary:planeAnchoring:alignment = "horizontal"' in stage
+    assert len([name for name in archive.namelist() if name.startswith('geometries/')])==7
+    for item in archive.infolist():
+        assert item.compress_type==ZIP_STORED
+        with open(web/'assets/floor-building.usdz','rb') as stream:
+            stream.seek(item.header_offset+26)
+            name_length,extra_length=struct.unpack('<HH',stream.read(4))
+        assert (item.header_offset+30+name_length+extra_length)%64==0
 print('PASS: local page/module resources, GLB integrity, and compiled target/browser checks')

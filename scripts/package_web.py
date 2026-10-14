@@ -4,7 +4,7 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 root = Path(__file__).resolve().parents[1]
 web = root/'docs'
-required=['index.html','ar.js','app.js','assets/sample-building.glb','assets/building-marker.png','assets/building-targets.mind']
+required=['index.html','ar.js','app.js','floor-ar.js','surface-placement.js','assets/sample-building.glb','assets/floor-building.glb','assets/floor-building.usdz','assets/building-marker.png','assets/building-targets.mind']
 for filename in required:
     if not (web/filename).is_file():
         raise FileNotFoundError(filename)

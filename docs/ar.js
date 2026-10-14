@@ -118,12 +118,13 @@ function cleanup() {
     video.pause();
     video.srcObject = null;
     video.remove();
+    engine.video = null;
   }
   if (anchor) {anchor.group.visible = false; anchor.visible = false;}
   poseStabilizer?.reset();
 }
 export function stop() {++runId; if (cameraPending) needsReload = true; cleanup();}
-export function setScale(value) {if (building) building.scale.setScalar(THREE.MathUtils.clamp(value, .025, .09));}
+export function setScale(value) {if (building) building.scale.setScalar(THREE.MathUtils.clamp(value, .04, .4));}
 export function rotate(axis = 'y') {rotationControls?.rotate(axis);}
 export function replay() {construction?.replay();}
-export function reset() {rotationControls?.reset(); setScale(.05);}
+export function reset() {rotationControls?.reset(); setScale(.14);}

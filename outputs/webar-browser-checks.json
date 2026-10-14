@@ -52,6 +52,18 @@
     "invalidPoseRejection": "passed",
     "note": "Synthetic test result, not a measurement on a physical phone"
   },
+  "floorPlacement": {
+    "horizontalSurfacesOnly": "passed",
+    "placementRequiresValidHit": "passed",
+    "selectedWorldPositionAndUprightOrientation": "passed",
+    "independentOfMarkerVisibility": "passed",
+    "reposition": "passed",
+    "invalidSurfaceRejection": "passed",
+    "nativeGlbErrors": 0,
+    "nativeGlbWarnings": 0,
+    "usdzArchiveUnitsAlignmentAndHorizontalAnchoring": "passed",
+    "physicalWebXrAndQuickLook": "not tested"
+  },
   "physicalPhoneCamera": "not tested",
   "result": "passed"
 }

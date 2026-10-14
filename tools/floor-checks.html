@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Floor placement checks</title><script type="importmap">{"imports":{"three":"../docs/vendor/three/three.module.js"}}</script></head><body><h1>Floor placement checks</h1><button id="check">Check placement rules</button><pre id="result" role="status">Ready</pre><script type="module">
+import * as THREE from 'three';
+import {isHorizontalSurface,createSurfacePlacement} from '../docs/surface-placement.js';
+document.querySelector('#check').addEventListener('click',()=>{
+  const result=document.querySelector('#result');
+  try{
+    const root=new THREE.Group();const placement=createSurfacePlacement(root);
+    const floor=new THREE.Matrix4().makeTranslation(1,-1.6,-3);
+    const wall=new THREE.Matrix4().makeRotationX(Math.PI/2);
+    if(!isHorizontalSurface(floor)||isHorizontalSurface(wall))throw new Error('Accept horizontal surfaces and reject vertical walls');
+    if(placement.place(new THREE.Vector3()))throw new Error('Do not place before a valid hit');
+    if(!placement.update(floor)||!placement.place(new THREE.Vector3(0,0,0)))throw new Error('Valid floor placement failed');
+    if(!root.visible||root.position.distanceTo(new THREE.Vector3(1,-1.6,-3))>.0001)throw new Error('Position must match the selected ground point');
+    if(root.rotation.x!==0||root.rotation.z!==0)throw new Error('The building must remain upright on the floor');
+    placement.update(null);if(!root.visible||!placement.placed)throw new Error('The placed building must not depend on the marker or reticle remaining visible');
+    placement.reset();if(root.visible||placement.placed)throw new Error('Reposition must clear the placed model');
+    if(placement.update(wall))throw new Error('Do not place on the vertical image marker');
+    const invalid=floor.clone();invalid.elements[5]=NaN;if(isHorizontalSurface(invalid))throw new Error('Invalid surface accepted');
+    result.textContent='PASS: horizontal-only hits, no placement without a surface, exact ground position, upright building, marker-independent placement, reposition, and invalid-pose rejection.\nPhysical WebXR and iPhone Quick Look still require phone testing.';
+  }catch(error){result.textContent='FAIL: '+error.message;}
+});
+</script></body></html>

@@ -8,6 +8,8 @@ A mobile WebAR experience using **MindAR image tracking**, a custom printable ma
 
 The complete static application is in `docs/`. Publish that folder over HTTPS. Runtime dependencies and assets are included locally; no app installation or runtime CDN requests are needed.
 
+Floor placement is available through WebXR where supported, with native iPhone Quick Look and Android Scene Viewer fallbacks. Scan a vertical marker, then choose a ground point nearby; or place directly without scanning. Native viewers do not run the browser's blue construction effect. The phone checks its available modes automatically. See [the floor-placement guide](WEBAR.md#floor-placement-and-larger-models).
+
 ![Building preview](outputs/sample-building-preview.png)
 
 ## Get the model

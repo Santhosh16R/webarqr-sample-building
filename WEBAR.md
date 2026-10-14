@@ -1,10 +1,36 @@
 # Webarqr — mobile WebAR guide
 
+## Floor placement and larger models
+
+The site now offers **floor placement** as well as marker tracking. It checks capabilities at runtime rather than assuming that every Android or iPhone browser supports WebXR.
+
+| Mode | Placement | Blue construction animation | Controls |
+| --- | --- | --- | --- |
+| WebXR on a compatible phone/browser | Horizontal-surface hit testing; optional XR anchors | Yes | Browser X/Y rotation, replay, size and reposition |
+| Apple AR Quick Look fallback | Native floor/surface placement from USDZ | The browser shader animation is not included | Native move/scale/rotate controls |
+| Android Scene Viewer fallback | Native floor/surface placement from GLB when available | The browser shader animation is not included | Native viewer controls |
+| Marker mode | Relative to the image marker | Yes | Browser controls; up to 4.6 times marker width |
+
+For the **vertical marker → ground nearby** flow:
+
+1. Show or print the marker vertically. Use **Start camera** to scan it.
+2. Once it is recognized, tap **Place on floor nearby** on compatible WebXR devices, or **Place on floor · native viewer** where offered.
+3. In WebXR, aim at the floor beside the marker. Move the phone slowly until the blue ring appears, then tap **Place building**. In a native viewer, use the viewer's AR placement controls.
+4. The building is now placed in the AR world and no longer requires the marker to stay in view. In WebXR it rises with the blue construction effect.
+
+The floor spot is chosen by the user. The marker's coordinates are not transferred automatically between the MindAR camera session and the WebXR/native session. A vertical marker by itself cannot tell the browser where the physical floor is.
+
+WebXR accepts only approximately horizontal hit poses, rejecting a vertical wall/marker. It can also accept a tabletop: choose the actual ground with the reticle. Placement starts at **two metres wide**, with a **0.5–10 metre width** slider. Marker mode starts at about **1.6 times marker width**, with a maximum of about **4.6 times**.
+
+Native assets are `docs/assets/floor-building.glb` and `floor-building.usdz`, both authored at two metres wide. Regenerate with `npm ci` followed by `npm run native:build`; validate with `npm run native:check` and `npm run web:check`. These native assets are separate from the original GLB.
+
+Phone hardware testing is still required: a desktop browser cannot verify ARCore floor detection or Apple Quick Look placement. The static checks verify the native GLB and USDZ archive, units, alignment and horizontal anchoring; browser checks cover placement rules and marker-mode regression.
+
 Open the page on your phone, allow camera access, and point it at the included **Building 01** marker. A three-storey commercial building appears anchored to the image. No app installation is required.
 
 The application is in `docs/`, ready for HTTPS static hosting or GitHub Pages. The original model and generation tools remain in `outputs/`.
 
-## Use it on your phone
+## Use marker mode on your phone
 
 1. Open the published WebAR URL directly in **Safari on iPhone** or **Chrome on Android**.
 2. On a second device, open `marker.html`, or print `docs/assets/building-marker.png`. Use the whole image; it is an image target, not a QR code.
@@ -84,6 +110,7 @@ For WebAR development, run `python tools/preview_server.py` and open:
 - `/tools/verify.html` — loads the real GLB, checks its orientation, imports the compiled target, and verifies image matching and tracking points at two angles.
 - `/tools/lifecycle.html` — runs the real application in a narrow frame with a synthetic canvas camera, without accessing a hardware camera. Use it to check acquisition, loss, reacquisition, camera close/restart, and controls.
 - `/tools/stability-checks.html` — tests stationary pose noise, deliberate movement, marker loss/reacquisition and invalid-pose rejection. Its noise-reduction number is synthetic and does not predict a particular phone's result.
+- `/tools/floor-checks.html` — tests horizontal-surface filtering, world placement, upright orientation, marker-independent visibility, and repositioning. It does not emulate a phone's physical plane detection.
 
 Browser checks do not replace a physical iPhone/Android test. Test camera permission denied/allowed, marker acquisition in daylight, marker loss and reacquisition, portrait/landscape, resizing/rotation, closing/reopening the camera, and returning after switching apps. Performance varies with the phone, lighting, and printed marker quality.
 
