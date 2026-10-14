@@ -1,4 +1,4 @@
-import json,math
+import json,math,sys
 from pathlib import Path
 import numpy as np
 from PIL import Image,ImageDraw
@@ -29,5 +29,5 @@ for i,face in enumerate(faces):
  shade=.55+.45*abs(np.dot(normal/max(length,1e-10),light))
  color=np.clip(np.array(face['color'])*shade+np.array(face['emissive'])*.25,0,1)*255
  view[mask]=z[mask];pixels[ymin:ymax+1,xmin:xmax+1][mask]=color.astype(np.uint8)
-Image.fromarray(pixels).save('docs/assets/tower-preview.png')
+Image.fromarray(pixels).save(sys.argv[1] if len(sys.argv)>1 else 'docs/assets/tower-preview.png')
 print('Rendered actual completed tower preview')

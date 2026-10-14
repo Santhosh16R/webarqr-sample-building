@@ -11,7 +11,7 @@
     "web:assets": "python scripts/prepare_web_assets.py",
     "web:check": "python scripts/check_web_assets.py",
     "web:package": "python scripts/package_web.py",
-    "native:build": "node scripts/build_tower_native.mjs",
+    "native:build": "node scripts/build_construction_tower.mjs && node scripts/build_tower_native.mjs",
     "native:check": "node scripts/validate_native_models.cjs"
   },
   "devDependencies": {

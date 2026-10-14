@@ -4,34 +4,31 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#f3f1e9">
-  <meta name="description" content="Bring an animated iNXT tower into your space with image-tracked augmented reality. No app to install.">
+  <meta name="description" content="Bring an animated iNXT tower into your space with floor-based augmented reality. No app to install.">
   <title>Webarqr — A new perspective</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261014-tower">
+  <link rel="stylesheet" href="styles.css?v=20261014-ground">
   <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}</script>
-  <script type="module" src="app.js?v=20261014-tower"></script>
+  <script type="module" src="app.js?v=20261014-ground"></script>
 </head>
 <body>
   <div id="ar-stage" aria-hidden="true"></div>
   <div id="landing">
     <header class="site-header shell">
       <a class="wordmark" href="./" aria-label="Webarqr home"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m16 2 13 7.5v13L16 30 3 22.5v-13Z M3 9.5 16 17l13-7.5M16 17v13 M9.5 6 23 13.5v13"/></svg>webarqr<span class="wordmark-dot">.</span></a>
-      <a class="header-link" href="marker.html" target="_blank" rel="noopener">Get the marker <span aria-hidden="true">↗</span></a>
+
     </header>
     <main class="shell">
       <section class="hero" aria-labelledby="hero-title">
         <div class="hero-copy">
           <p class="eyebrow"><span></span> A LITTLE SPACE TO EXPLORE</p>
           <h1 id="hero-title">A building.<br>A whole new<br><em>perspective.</em></h1>
-          <p class="intro">Bring architecture off the screen and into your space. Scan a marker, then place a larger building on the floor nearby—or go straight to floor placement.</p>
+          <p class="intro">Place the tower on your floor and watch it rise, with a blue scan following every stage of construction.</p>
           <div class="hero-actions">
-            <button id="start" class="button primary"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 6 9.5 3.5h5L16 6h4v14H4V6Z"/><circle cx="12" cy="12.5" r="3.5"/></svg><span id="start-label">Start camera</span><span aria-hidden="true">↗</span></button>
-            <a class="text-link" href="marker.html" target="_blank" rel="noopener">Open marker <span aria-hidden="true">↗</span></a>
+            <button id="start" class="button primary" disabled>Place on floor <span aria-hidden="true">↗</span></button>
+            <a id="native-floor" class="button primary" href="assets/floor-building.usdz" hidden><img src="assets/tower-preview.png" width="22" height="22" alt="">Place on floor <span aria-hidden="true">↗</span></a>
           </div>
-          <div class="floor-actions"><button id="floor-start" class="button secondary" disabled>Checking floor support…</button><a id="native-floor" class="button secondary" href="assets/floor-building.usdz" hidden><img src="assets/tower-preview.png" width="22" height="22" alt="">Native floor viewer</a></div>
-          <p id="floor-support" class="microcopy" role="status">Checking this browser’s floor-placement support.</p>
-          <p class="microcopy">No app to install. Your camera stays on your device.</p>
-          <div class="marker-calibration"><label for="marker-width">Marker image width (cm)</label><input id="marker-width" type="number" min="5" max="100" step="0.5" value="15"><p>For marker mode, enter the full image’s measured width. The printed template is 15 cm wide.</p></div>
+          <p id="floor-support" class="microcopy" role="status">Checking floor AR support…</p>
           <p id="launch-status" class="launch-status" role="status" aria-live="polite"></p>
           <noscript><p class="launch-status error">Enable JavaScript to start the AR experience.</p></noscript>
         </div>
@@ -45,24 +42,22 @@
       <section class="how-it-works" aria-labelledby="how-title">
         <div class="section-heading"><p class="eyebrow">FROM SCREEN TO SPACE</p><h2 id="how-title">Three steps. One new view.</h2></div>
         <ol class="steps">
-          <li><span class="step-number">01</span><div><h3>Scan, or place directly</h3><p><a href="marker.html" target="_blank" rel="noopener">Show the marker</a> vertically on paper or a second screen. Or start with Place on floor.</p></div></li>
-          <li><span class="step-number">02</span><div><h3>Find the ground nearby</h3><p>After scanning, choose Place on floor nearby. Aim at a clear floor and wait for the blue ring.</p></div></li>
-          <li><span class="step-number">03</span><div><h3>Build in your space</h3><p>Tap Place building. It rises at the chosen spot without needing the marker in view. Native viewers use their own placement controls.</p></div></li>
+          <li><span class="step-number">01</span><div><h3>Find your floor</h3><p>Open floor AR and aim at a clear, well-lit patch of floor. Move your phone slowly.</p></div></li>
+          <li><span class="step-number">02</span><div><h3>Tap to build</h3><p>Tap the blue ring to place the tower. In a native viewer, use its floor-placement controls.</p></div></li>
+          <li><span class="step-number">03</span><div><h3>Watch it rise</h3><p>A blue scan follows construction. Replay the animation, or reset to choose another spot.</p></div></li>
         </ol>
       </section>
-      <section class="help"><details><summary>A little help getting started <span aria-hidden="true">+</span></summary><div><p>Use Safari on iPhone or Chrome on Android. Open this page directly in your browser rather than inside a messaging app.</p><p>If the camera is blocked, allow access in your browser’s site settings and try again. Keep the marker fully visible, avoid glare, and start around 30–60 cm away.</p><p>The marker must be on paper or a second screen. Your phone cannot scan a marker displayed on its own screen.</p></div></details></section>
+      <section class="help"><details><summary>A little help getting started <span aria-hidden="true">+</span></summary><div><p>Use Safari on iPhone or Chrome on an ARCore-supported Android phone. Aim at the actual floor; horizontal-surface tracking can also recognize tables.</p><p>Allow AR access when asked. Native viewers provide their own placement and playback controls. No marker is needed.</p></div></details></section>
     </main>
-    <footer class="shell"><span>Built for a different point of view.</span><span>WEBARQR / IMAGE-TRACKED AR</span></footer>
+    <footer class="shell"><span>Built for a different point of view.</span><span>WEBARQR / FLOOR AR</span></footer>
   </div>
   <section id="ar-ui" class="ar-ui" aria-label="AR controls" hidden>
-    <div class="ar-top"><div class="ar-brand">webarqr.</div><button id="stop" class="glass-button">Close camera <span aria-hidden="true">×</span></button></div>
-    <div id="tracking-status" class="tracking-status" role="status" aria-live="polite">Looking for the marker</div>
-    <div id="scan-guide" class="scan-guide" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <div class="ar-top"><button id="stop" class="glass-button" aria-label="Close AR" title="Close AR">×</button></div>
+    <div id="tracking-status" class="tracking-status" role="status" aria-live="polite">Finding the floor…</div>
     <div class="ar-bottom">
-      <p id="scan-hint">Fit the whole marker in view. Hold steady.</p>
-      <p id="animation-status">Construction ready · 20 seconds</p>
-      <div class="floor-ar-actions"><button id="switch-floor" class="glass-button" hidden disabled>Place on floor nearby</button><a id="native-floor-marker" class="glass-button" href="assets/floor-building.usdz" hidden><img src="assets/tower-preview.png" width="18" height="18" alt="">Place on floor · native viewer</a><button id="place-floor" class="glass-button" hidden disabled>Place building</button><button id="move-floor" class="glass-button" hidden>Move building</button></div>
-      <div class="control-panel"><label for="size">Building width (cm)</label><input id="size" type="range" min="5" max="7.3" step="0.1" value="7.3"><output id="size-readout" for="size">Width 7.3 cm · upright height 29.8 cm (max 30 cm)</output><div class="control-buttons"><button id="rotate-x" class="glass-button">Rotate X 90°</button><button id="rotate-y" class="glass-button">Rotate Y 90°</button><button id="replay" class="glass-button">Replay build</button><button id="reset" class="glass-button">Reset view</button></div></div>
+      <p id="scan-hint">Aim at the floor. Tap the blue ring to build.</p>
+      <p id="animation-status" hidden>Construction ready · 20 seconds</p>
+      <div class="control-buttons"><button id="replay" class="glass-button" disabled>Replay animation</button><button id="reset" class="glass-button" disabled>Reset</button></div>
     </div>
   </section>
 </body>

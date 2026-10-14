@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createRotationControls} from './building-effects.js?v=20261014-blue';
-import {createSurfacePlacement} from './surface-placement.js?v=20261014-floor';
-import {createTowerAnimation,showTowerProgress} from './tower-animation.js?v=20261014-tower';
-import {DEFAULT_WIDTH_CM,floorScaleFromWidthCm} from './model-size.js?v=20261014-tower';
+import {createSurfacePlacement} from './surface-placement.js?v=20261014-ground';
+import {createTowerAnimation,showTowerProgress} from './tower-animation.js?v=20261014-ground';
+import {DEFAULT_WIDTH_CM,floorScaleFromWidthCm} from './model-size.js?v=20261014-ground';
 
 let current;
 const url = filename => new URL(`assets/${filename}`,import.meta.url).href;
@@ -15,7 +14,7 @@ export async function start(container,overlay,{onStatus,onEnd}) {
   });
   let session;
   try {session = await sessionPromise;}
-  catch(error){throw new Error(error?.name==='NotAllowedError'?'Allow AR access in your browser, then try floor placement again.':'Animated floor AR is not available in this browser. Try the native floor viewer or marker mode.');}
+  catch(error){throw new Error(error?.name==='NotAllowedError'?'Allow AR access in your browser, then try floor placement again.':'Animated floor AR is not available in this browser. Try the native floor viewer.');}
   const state={session,onEnd,anchor:null,hit:null,ended:false,placementRevision:0};current=state;
   session.addEventListener('end',()=>cleanup(state),{once:true});
   try {
@@ -31,9 +30,9 @@ export async function start(container,overlay,{onStatus,onEnd}) {
     const camera=state.camera=new THREE.PerspectiveCamera();
     const root=state.root=new THREE.Group();scene.add(root);
     const pivot=state.pivot=new THREE.Group();root.add(pivot);
-    state.rotation=createRotationControls(pivot);
+
     state.placement=createSurfacePlacement(root);
-    const gltf=await new GLTFLoader().loadAsync(url('iNXT_Tower_Animated.glb'));
+    const gltf=await new GLTFLoader().loadAsync(url('iNXT_Tower_Construction.glb'));
     const model=state.model=gltf.scene;
     if(state.ended) {disposeObject(model);return false;}
     state.effects=createTowerAnimation(gltf,{onProgress:showTowerProgress});state.model=state.effects.model;
@@ -77,7 +76,7 @@ export async function start(container,overlay,{onStatus,onEnd}) {
           const pose=frame.getPose(state.anchor.anchorSpace,reference);
           if(pose)root.position.lerp(new THREE.Vector3().setFromMatrixPosition(new THREE.Matrix4().fromArray(pose.transform.matrix)),.3);
         }
-        state.effects.update(seconds);state.rotation.update(seconds);
+        state.effects.update(seconds);
       }
       state.report(found);
       renderer.render(scene,camera);
@@ -86,7 +85,7 @@ export async function start(container,overlay,{onStatus,onEnd}) {
     return true;
   } catch(error) {
     await session.end().catch(()=>{});cleanup(state);
-    throw new Error(error?.message || 'Floor detection could not start on this device. Try the native floor viewer or marker mode.');
+    throw new Error(error?.message || 'Floor detection could not start on this device. Try the native floor viewer.');
   }
 }
 
@@ -106,10 +105,13 @@ function commitPlacement(state){
 export function reposition(){
   if(!current)return;++current.placementRevision;current.anchor?.delete();current.anchor=null;current.placement.reset();current.report(false);
 }
-export function rotate(axis){current?.rotation?.rotate(axis);}
-export function replay(){current?.effects?.replay();}
-export function setScale(width){if(current?.model)current.model.scale.setScalar(floorScaleFromWidthCm(width));}
-export function reset(){current?.rotation?.reset();setScale(DEFAULT_WIDTH_CM);}
+export function replay(){if(current?.placement.placed)current.effects.replay();}
+export function reset(){
+ if(!current)return;
+ current.pendingPlace=false;current.lastHit=null;
+ current.effects.replay();current.model.scale.setScalar(floorScaleFromWidthCm(DEFAULT_WIDTH_CM));
+ reposition();
+}
 export function stop(){current?.session.end().catch(()=>{if(current)cleanup(current);});}
 function disposeObject(object){object.traverse(child=>{child.geometry?.dispose();if(child.material){for(const material of [].concat(child.material))material.dispose();}});}
 function cleanup(state){

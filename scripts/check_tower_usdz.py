@@ -19,5 +19,8 @@ for frame in [0,120,240,360,480]:
  height=bounds.GetSize()[1];assert height<=.300001,(frame,height);heights.append(height)
 active_counts=[sum(abs(p.GetAttribute('xformOp:transform').Get(t).GetDeterminant())>1e-12 for p in animated) for t in [0,120,240,360,480]]
 assert active_counts[-1]>active_counts[0]+1000
-report={'result':'passed','meshes':len(meshes),'animatedTransforms':len(animated),'heightsMetresAt0_5_10_15_20':heights,'activeAnimatedMeshesAt0_5_10_15_20':active_counts,'checks':['OpenUSD loads complete USDZ','geometry references resolve','animation time samples','30 cm height cap'],'physicalIPhoneTested':False}
+scanners=[p.GetAttribute('xformOp:transform') for p in animated if abs(p.GetAttribute('xformOp:transform').Get(0).GetDeterminant())>1e-12 and abs(p.GetAttribute('xformOp:transform').Get(480).GetDeterminant())<1e-14]
+assert len(scanners)==2
+assert any(a.Get(240).ExtractTranslation()[1]>a.Get(0).ExtractTranslation()[1]+.1 for a in scanners)
+report={'result':'passed','meshes':len(meshes),'animatedTransforms':len(animated),'heightsMetresAt0_5_10_15_20':heights,'activeAnimatedMeshesAt0_5_10_15_20':active_counts,'checks':['OpenUSD loads complete USDZ','geometry references resolve','animation time samples','30 cm height cap','two animated blue scanners disappear at completion','scan rises during construction'],'physicalIPhoneTested':False}
 Path('outputs/tower-usdz-checks.json').write_text(json.dumps(report,indent=2));print(report)

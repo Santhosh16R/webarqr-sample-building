@@ -19,7 +19,7 @@ export function createSurfacePlacement(root) {
       root.rotation.set(0,Math.atan2(viewerPosition.x-root.position.x,viewerPosition.z-root.position.z),0);
       root.visible = true;placed = true;return true;
     },
-    reset() {placed = false;root.visible = false;},
+    reset() {placed = false;ready = false;root.visible = false;},
     get placed() {return placed;},
   };
 }

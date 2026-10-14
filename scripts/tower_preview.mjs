@@ -1,9 +1,9 @@
 import {readFile,writeFile} from 'node:fs/promises';
 import {AnimationMixer,LoopOnce,Vector3} from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
-const bytes=await readFile('docs/assets/iNXT_Tower_Animated.glb');
+const bytes=await readFile(process.argv[2]??'docs/assets/iNXT_Tower_Animated.glb');
 const gltf=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength),'');
-const mixer=new AnimationMixer(gltf.scene);const action=mixer.clipAction(gltf.animations[0]);action.setLoop(LoopOnce,1);action.clampWhenFinished=true;action.play();mixer.setTime(20);gltf.scene.updateMatrixWorld(true);
+const mixer=new AnimationMixer(gltf.scene);const action=mixer.clipAction(gltf.animations[0]);action.setLoop(LoopOnce,1);action.clampWhenFinished=true;action.play();mixer.setTime(Number(process.argv[3]??20));gltf.scene.updateMatrixWorld(true);
 const faces=[];
 gltf.scene.traverse(mesh=>{
  if(!mesh.isMesh)return;

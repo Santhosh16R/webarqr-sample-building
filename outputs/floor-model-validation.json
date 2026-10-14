@@ -2,18 +2,36 @@
   "uri": "floor-building.glb",
   "mimeType": "model/gltf-binary",
   "validatorVersion": "2.0.0-dev.3.10",
-  "validatedAt": "2026-10-14T14:33:44.102Z",
+  "validatedAt": "2026-10-14T15:02:35.398Z",
   "issues": {
     "numErrors": 0,
     "numWarnings": 0,
     "numInfos": 1,
-    "numHints": 0,
+    "numHints": 3,
     "messages": [
       {
         "code": "UNUSED_OBJECT",
         "message": "This object may be unused.",
         "severity": 2,
         "pointer": "/meshes/1301/primitives/0/attributes/TEXCOORD_0"
+      },
+      {
+        "code": "BUFFER_VIEW_TARGET_MISSING",
+        "message": "bufferView.target should be set for vertex or index data.",
+        "severity": 3,
+        "pointer": "/meshes/1302/primitives/0/attributes/POSITION"
+      },
+      {
+        "code": "BUFFER_VIEW_TARGET_MISSING",
+        "message": "bufferView.target should be set for vertex or index data.",
+        "severity": 3,
+        "pointer": "/meshes/1302/primitives/0/attributes/NORMAL"
+      },
+      {
+        "code": "BUFFER_VIEW_TARGET_MISSING",
+        "message": "bufferView.target should be set for vertex or index data.",
+        "severity": 3,
+        "pointer": "/meshes/1302/primitives/0/indices"
       }
     ],
     "truncated": false
@@ -29,18 +47,18 @@
         "pointer": "/buffers/0",
         "mimeType": "application/gltf-buffer",
         "storage": "glb",
-        "byteLength": 10539172
+        "byteLength": 10588580
       }
     ],
     "animationCount": 1,
-    "materialCount": 10,
+    "materialCount": 11,
     "hasMorphTargets": false,
     "hasSkins": false,
     "hasTextures": false,
     "hasDefaultScene": true,
-    "drawCallCount": 1367,
-    "totalVertexCount": 114891,
-    "totalTriangleCount": 84884,
+    "drawCallCount": 1368,
+    "totalVertexCount": 115764,
+    "totalTriangleCount": 86420,
     "maxUVs": 1,
     "maxInfluences": 0,
     "maxAttributes": 3

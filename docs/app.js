@@ -1,191 +1,72 @@
-import {DEFAULT_WIDTH_CM,MAX_WIDTH_CM,clampWidthCm,clampMarkerWidthCm,heightFromWidthCm} from './model-size.js?v=20261014-tower';
-const startButton = document.querySelector('#start');
-const startLabel = document.querySelector('#start-label');
-const launchStatus = document.querySelector('#launch-status');
-const arUI = document.querySelector('#ar-ui');
-const stage = document.querySelector('#ar-stage');
-let runtime;
-let starting = false;
-let running = false;
-let activeMode = 'marker';
-let floorRuntime;
-let markerSeen = false;
-let nativeAvailable = false;
-const floorButton = document.querySelector('#floor-start');
-const nativeLinks = [document.querySelector('#native-floor'),document.querySelector('#native-floor-marker')];
-
-function updateFloorTransfers() {
-  document.querySelector('#switch-floor').hidden = !floorRuntime || activeMode !== 'marker';
-  document.querySelector('#switch-floor').disabled = !markerSeen;
-  nativeLinks[1].hidden = !nativeAvailable || activeMode !== 'marker' || !markerSeen;
+const startButton=document.querySelector('#start');
+const nativeLink=document.querySelector('#native-floor');
+const status=document.querySelector('#launch-status');
+const support=document.querySelector('#floor-support');
+const arUI=document.querySelector('#ar-ui');
+const stage=document.querySelector('#ar-stage');
+const replayButton=document.querySelector('#replay');
+const resetButton=document.querySelector('#reset');
+let runtime,starting=false,running=false,cancelled=false,nativeAvailable=false;
+function message(text,error=false){status.textContent=text;status.classList.toggle('error',error);}
+function leaveAR(text='',stop=true){
+ running=false;cancelled=true;if(stop)runtime?.stop();
+ document.body.classList.remove('is-ar');arUI.hidden=true;stage.setAttribute('aria-hidden','true');
+ message(text);startButton.focus({preventScroll:true});
 }
-function configureMode(mode) {
-  activeMode = mode;
-  const size = document.querySelector('#size');
-  const floor = mode === 'floor';
-  size.min = '5';size.max = String(MAX_WIDTH_CM);
-  size.step = '.1';size.value = String(DEFAULT_WIDTH_CM);
-  document.querySelector('label[for="size"]').textContent = 'Building width (cm)';
-  updateSizeReadout();
-  document.querySelector('#place-floor').hidden = !floor;
-  document.querySelector('#move-floor').hidden = true;
-  updateFloorTransfers();
-}
-function updateSizeReadout() {
-  const width=clampWidthCm(Number(document.querySelector('#size').value));
-  document.querySelector('#size-readout').textContent=`Width ${width.toFixed(1)} cm · upright height ${heightFromWidthCm(width).toFixed(1)} cm (max 30 cm)`;
-}
-
-function setStatus(message, error = false) {
-  launchStatus.textContent = message;
-  launchStatus.classList.toggle('error', error);
-}
-function leaveAR(message = '', stopRuntime = true) {
-  running = false;
-  if (stopRuntime) runtime?.stop();
-  document.body.classList.remove('is-ar');
-  arUI.hidden = true;
-  stage.setAttribute('aria-hidden', 'true');
-  setStatus(message);
-  startButton.focus({preventScroll:true});
-}
-startButton.addEventListener('click', async () => {
-  if (starting || running) return;
-  if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
-    setStatus('Camera access needs HTTPS. Open the published page in Safari on iPhone or Chrome on Android.', true);
-    return;
-  }
-  starting = true;
-  markerSeen = false;
-  configureMode('marker');
-  startButton.disabled = true;
-  startLabel.textContent = 'Getting ready…';
-  setStatus('Loading the building and preparing your camera…');
-  try {
-    runtime = await import('./ar.js?v=20261014-tower');
-    runtime.setMarkerWidth(Number(document.querySelector('#marker-width').value));
-    await runtime.start(stage, message => setStatus(message), found => {
-      if (activeMode !== 'marker') return;
-      if (found) markerSeen = true;
-      updateFloorTransfers();
-      const status = document.querySelector('#tracking-status');
-      status.textContent = found ? 'Marker found · building in view' : 'Looking for the marker';
-      status.classList.toggle('found', found);
-      document.querySelector('#scan-guide').hidden = found;
-      document.querySelector('#scan-hint').textContent = found ? 'Move slowly to explore. Keep the marker in view.' : 'Fit the whole marker in view. Hold steady.';
-    });
-    if (document.hidden) {
-      runtime.stop();
-      setStatus('Camera paused while the page was away. Tap Start camera to return.');
-      return;
-    }
-    running = true;
-    document.body.classList.add('is-ar');
-    stage.setAttribute('aria-hidden', 'false');
-    arUI.hidden = false;
-    document.querySelector('#stop').focus();
-    setStatus('');
-  } catch (error) {
-    runtime?.stop();
-    setStatus(error?.message || 'Could not open the camera. Allow camera access in site settings, then try again.', true);
-  } finally {
-    starting = false;
-    startButton.disabled = false;
-    startLabel.textContent = 'Start camera';
-  }
+startButton.addEventListener('click',async()=>{
+ if(starting||running||!runtime)return;
+ starting=true;cancelled=false;startButton.disabled=true;
+ document.body.classList.add('is-ar');arUI.hidden=false;stage.setAttribute('aria-hidden','false');
+ replayButton.disabled=true;resetButton.disabled=true;
+ document.querySelector('#tracking-status').textContent='Finding the floor…';document.querySelector('#tracking-status').hidden=false;
+ document.querySelector('#scan-hint').textContent='Aim at the floor and move slowly. Tap the blue ring to build.';
+ try{
+  const opened=await runtime.start(stage,arUI,{
+   onStatus:({surfaceFound,placed,tracking})=>{
+    const label=document.querySelector('#tracking-status');
+    label.textContent=!tracking?'Tracking paused · move slowly':placed?'Placed on the floor':surfaceFound?'Tap the blue ring to build':'Finding the floor…';
+    label.classList.toggle('found',placed||surfaceFound);label.hidden=placed&&tracking;
+    replayButton.disabled=!placed;resetButton.disabled=!placed;
+    document.querySelector('#scan-hint').textContent=placed?'': 'Aim at the floor and move slowly. Tap the blue ring to build.';
+   },
+   onEnd:()=>leaveAR('AR closed. Ready to place again.',false),
+  });
+  if(cancelled){runtime.stop();return;}
+  running=opened;message('');document.querySelector('#stop').focus();
+ }catch(error){
+  leaveAR('',false);message(error?.message||'Floor AR could not start.',true);
+  if(nativeAvailable){startButton.hidden=true;nativeLink.hidden=false;support.textContent='Continue with your phone’s native floor AR viewer.';nativeLink.focus({preventScroll:true});}
+ }
+ finally{starting=false;startButton.disabled=false;}
 });
-document.querySelector('#stop').addEventListener('click', () => leaveAR('Camera closed. Ready when you are.'));
-document.querySelector('#size').addEventListener('input', event => {runtime?.setScale(Number(event.target.value));updateSizeReadout();});
-document.querySelector('#marker-width').addEventListener('change',event=>{
-  const width=clampMarkerWidthCm(Number(event.target.value));event.target.value=String(width);
-  if(activeMode==='marker')runtime?.setMarkerWidth?.(width);
-});
-document.querySelector('#rotate-x').addEventListener('click', () => runtime?.rotate('x'));
-document.querySelector('#rotate-y').addEventListener('click', () => runtime?.rotate('y'));
-document.querySelector('#replay').addEventListener('click', () => runtime?.replay());
-document.querySelector('#reset').addEventListener('click', () => {
-  runtime?.reset();
-  document.querySelector('#size').value = String(DEFAULT_WIDTH_CM);
-  updateSizeReadout();
-});
-document.addEventListener('visibilitychange', () => {
-  if (document.hidden && running && activeMode === 'marker') leaveAR('Camera paused while the page was away. Tap Start camera to return.');
-});
-
-async function startFloor() {
-  if (starting || !floorRuntime) return;
-  starting = true;floorButton.disabled = true;
-  runtime?.stop();running = false;
-  configureMode('floor');
-  runtime = floorRuntime;
-  document.body.classList.add('is-ar');arUI.hidden = false;stage.setAttribute('aria-hidden','false');
-  document.querySelector('#scan-guide').hidden = true;
-  document.querySelector('#tracking-status').textContent = 'Opening floor detection…';
-  document.querySelector('#scan-hint').textContent = 'Move your phone slowly over the floor beside the marker.';
-  document.querySelector('#place-floor').disabled = true;
-  try {
-    const opened = await floorRuntime.start(stage,arUI,{
-      onStatus:({surfaceFound,placed,tracking})=>{
-        const status=document.querySelector('#tracking-status');
-        status.textContent = !tracking ? 'Tracking paused · move slowly' : placed ? 'Building placed · marker no longer needed' : surfaceFound ? 'Horizontal surface found · tap Place building' : 'Looking for a horizontal surface';
-        status.classList.toggle('found',placed||surfaceFound);
-        document.querySelector('#place-floor').hidden=placed;
-        document.querySelector('#place-floor').disabled=!surfaceFound;
-        document.querySelector('#move-floor').hidden=!placed;
-        document.querySelector('#scan-hint').textContent=placed?'Walk around the building. Resize or rotate it below.':'Aim at the floor beside the marker. Wait for the blue ring, then place.';
-      },
-      onEnd:()=>leaveAR('Floor AR closed. You can open it again or scan a marker.',false),
-    });
-    running=opened;
-  } catch(error) {
-    leaveAR('',false);
-    setStatus(error?.message || 'Floor AR could not start. Try the native floor viewer or marker mode.',true);
-  } finally {starting=false;floorButton.disabled=false;}
-}
-floorButton.addEventListener('click',startFloor);
-document.querySelector('#switch-floor').addEventListener('click',startFloor);
-document.querySelector('#place-floor').addEventListener('click',()=>floorRuntime?.place());
-document.querySelector('#move-floor').addEventListener('click',()=>floorRuntime?.reposition());
-arUI.addEventListener('beforexrselect',event=>{if(event.target.closest('button,a,input,label'))event.preventDefault();});
-for (const link of nativeLinks) link.addEventListener('click',()=>{if(running)leaveAR('Opening your phone’s native AR viewer.');});
-
-async function detectFloorSupport() {
-  const support=document.querySelector('#floor-support');
-  const probe=document.createElement('a');
-  const quickLook=probe.relList?.supports?.('ar');
-  const android=/Android/i.test(navigator.userAgent);
-  if (quickLook || android) {
-    nativeAvailable=true;
-    for(const link of nativeLinks){
-      if(quickLook){link.rel='ar';link.href=new URL('assets/floor-building.usdz?v=20261014-tower#allowsContentScaling=0',location.href).href;}
-      else {
-        const model=new URL('assets/floor-building.glb?v=20261014-tower',location.href).href;
-        const fallback=new URL('./?native-ar=unavailable',location.href).href;
-        link.href=`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(model)}&mode=ar_preferred&resizable=false&title=iNXT%20Tower#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(fallback)};end;`;
-      }
-    }
-    nativeLinks[0].hidden=false;
+document.querySelector('#stop').addEventListener('click',()=>leaveAR('AR closed. Ready to place again.'));
+replayButton.addEventListener('click',()=>runtime?.replay());
+resetButton.addEventListener('click',()=>runtime?.reset());
+arUI.addEventListener('beforexrselect',event=>{if(event.target.closest('button,a'))event.preventDefault();});
+nativeLink.addEventListener('click',()=>message('Opening floor AR. Aim at the floor and use the viewer’s placement controls.'));
+async function detectFloorSupport(){
+ const probe=document.createElement('a');const quickLook=probe.relList?.supports?.('ar');
+ const android=/Android/i.test(navigator.userAgent);nativeAvailable=quickLook||android;
+ if(quickLook){nativeLink.rel='ar';nativeLink.href=new URL('assets/floor-building.usdz?v=20261014-ground#allowsContentScaling=0',document.baseURI).href;}
+ else if(android){
+  const file=new URL('assets/floor-building.glb?v=20261014-ground',document.baseURI).href;
+  const fallback=new URL('./?native-ar=unavailable',document.baseURI).href;
+  nativeLink.href=`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(file)}&mode=ar_only&resizable=false&title=iNXT%20Tower#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(fallback)};end;`;
+ }
+ try{
+  if(navigator.xr&&await navigator.xr.isSessionSupported('immersive-ar')){
+   runtime=await import('./floor-ar.js?v=20261014-ground');startButton.hidden=false;startButton.disabled=false;
+   support.textContent='Find the floor, tap the blue ring, and watch it rise. Maximum height: 30 cm.';
+  }else{
+   startButton.hidden=true;nativeLink.hidden=!nativeAvailable;
+   support.textContent=nativeAvailable?'Floor placement opens in your phone’s AR viewer. The blue construction scan is included; use the viewer’s playback controls.':'Floor AR is not available in this browser. Open this page in Safari on a supported iPhone or Chrome on an ARCore Android phone.';
   }
-  try {
-    if (navigator.xr && await navigator.xr.isSessionSupported('immersive-ar')) {
-      floorRuntime=await import('./floor-ar.js?v=20261014-tower');
-      floorButton.disabled=false;floorButton.textContent='Place on floor';
-      support.textContent='Animated floor placement is available. Scan the marker first, or place directly.';
-    }else{
-      floorButton.hidden=true;
-      support.textContent=nativeAvailable?'Native floor viewer: animated tower, maximum 30 cm upright height. Use the viewer’s playback controls to replay.':'This browser does not offer floor AR. Marker mode still works with camera access.';
-    }
-  }catch{
-    floorButton.hidden=true;support.textContent='Floor AR could not be checked. Try the native floor viewer, or use marker mode.';
-  }
-  updateFloorTransfers();
+ }catch{
+  startButton.hidden=true;nativeLink.hidden=!nativeAvailable;
+  support.textContent=nativeAvailable?'Open floor AR with your phone’s native viewer.':'Floor AR could not be checked on this device.';
+ }
+ if(new URLSearchParams(location.search).has('native-ar'))message('The native AR viewer could not open. Check that this phone supports AR and its AR services are installed.',true);
 }
 detectFloorSupport();
-window.addEventListener('pagehide', () => runtime?.stop());
-window.addEventListener('unhandledrejection', event => {
-  if (running) {
-    event.preventDefault();
-    leaveAR();
-    setStatus('AR stopped unexpectedly. Close other camera apps and try again.', true);
-  }
-});
+window.addEventListener('pagehide',()=>{cancelled=true;runtime?.stop();});
+window.addEventListener('unhandledrejection',event=>{if(running){event.preventDefault();leaveAR();message('AR stopped unexpectedly. Close other camera apps and try again.',true);}});

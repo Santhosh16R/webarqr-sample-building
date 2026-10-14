@@ -4,7 +4,7 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {USDZExporter} from 'three/examples/jsm/exporters/USDZExporter.js';
 import * as zip from 'three/examples/jsm/libs/fflate.module.js';
 
-const original=await readFile('docs/assets/iNXT_Tower_Animated.glb');
+const original=await readFile('docs/assets/iNXT_Tower_Construction.glb');
 const dims=JSON.parse(await readFile('outputs/tower-dimensions.json'));
 const jsonLength=original.readUInt32LE(12);
 const gltf=JSON.parse(original.subarray(20,20+jsonLength));

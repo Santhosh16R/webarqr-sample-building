@@ -82,6 +82,23 @@
     "durationSeconds": 20,
     "nativeAnimationIncluded": true,
     "checks": "tower-animation-checks.json and tower-usdz-checks.json",
+    "physicalPhonesTested": false,
+    "constructionFile": "iNXT_Tower_Construction.glb",
+    "blueScanIncluded": true
+  },
+  "activeMode": "floor-only",
+  "floorOnlyUI": {
+    "result": "passed",
+    "controls": [
+      "Replay animation",
+      "Reset",
+      "Close AR"
+    ],
+    "placement": "tap horizontal floor reticle",
+    "resetRequiresNewHit": true,
+    "markerEntryRemoved": true,
+    "nativeLauncherBranches": "simulated Android and iPhone verified",
+    "webxrPermissionDenied": "verified",
     "physicalPhonesTested": false
   }
 }

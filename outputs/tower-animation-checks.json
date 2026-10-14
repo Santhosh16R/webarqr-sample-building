@@ -2,7 +2,7 @@
   "result": "passed",
   "duration": 20,
   "clip": "Progressive Construction",
-  "tracks": 1294,
+  "tracks": 1297,
   "heightsMetresAt0_5_10_15_20": [
     0.28975247390115105,
     0.28975247390115105,
@@ -11,17 +11,19 @@
     0.29784360721016806
   ],
   "activeMeshesAt0_5_10_15_20": [
-    9,
-    269,
-    731,
-    1175,
+    11,
+    271,
+    733,
+    1177,
     1367
   ],
   "checks": [
     "24 fps height envelope <= 30 cm",
     "construction progresses",
     "holds completed frame",
-    "replay restarts"
+    "replay restarts",
+    "blue scan rises during construction",
+    "scanner disappears at completion and restores on replay"
   ],
   "physicalPhonesTested": false
 }
