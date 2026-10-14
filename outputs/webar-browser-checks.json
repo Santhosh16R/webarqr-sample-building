@@ -64,6 +64,16 @@
     "usdzArchiveUnitsAlignmentAndHorizontalAnchoring": "passed",
     "physicalWebXrAndQuickLook": "not tested"
   },
+  "centimetreSizing": {
+    "widthRangeCm": [5,34.5],
+    "defaultWidthCm": 30,
+    "maximumUprightHeightCm": 30,
+    "floorMetreConversion": "passed",
+    "markerPhysicalWidthCalibration": "passed",
+    "oversizeInputClamping": "passed",
+    "nativeModelsHeightCm": 30,
+    "nativeScaling": "disabled"
+  },
   "physicalPhoneCamera": "not tested",
   "result": "passed"
 }

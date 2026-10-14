@@ -6,7 +6,7 @@ const root = new URL('../',import.meta.url);
 const original = await readFile(new URL('docs/assets/sample-building.glb',root));
 const jsonLength = original.readUInt32LE(12);
 const gltf = JSON.parse(original.subarray(20,20+jsonLength).toString());
-gltf.nodes[0].scale = [2/11.4,2/11.4,2/11.4];
+gltf.nodes[0].scale = [.3/9.9,.3/9.9,.3/9.9];
 for (const material of gltf.materials) {
   if (material.name === 'Blue glass') material.emissiveFactor = [.025,.12,.45];
 }
@@ -22,4 +22,4 @@ const asset=await new GLTFLoader().parseAsync(bytes.buffer.slice(bytes.byteOffse
 asset.scene.updateMatrixWorld(true);
 const usdz=await new USDZExporter().parse(asset.scene);
 await writeFile(new URL('docs/assets/floor-building.usdz',root),usdz);
-console.log(`Created native AR models at 2 metres wide: GLB ${bytes.length} bytes; USDZ ${usdz.length} bytes`);
+console.log(`Created native AR models at 30 cm upright height: GLB ${bytes.length} bytes; USDZ ${usdz.length} bytes`);

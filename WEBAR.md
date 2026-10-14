@@ -7,9 +7,9 @@ The site now offers **floor placement** as well as marker tracking. It checks ca
 | Mode | Placement | Blue construction animation | Controls |
 | --- | --- | --- | --- |
 | WebXR on a compatible phone/browser | Horizontal-surface hit testing; optional XR anchors | Yes | Browser X/Y rotation, replay, size and reposition |
-| Apple AR Quick Look fallback | Native floor/surface placement from USDZ | The browser shader animation is not included | Native move/scale/rotate controls |
-| Android Scene Viewer fallback | Native floor/surface placement from GLB when available | The browser shader animation is not included | Native viewer controls |
-| Marker mode | Relative to the image marker | Yes | Browser controls; up to 4.6 times marker width |
+| Apple AR Quick Look fallback | Native floor/surface placement from USDZ | The browser shader animation is not included | Native move/rotate controls; fixed 30 cm upright height |
+| Android Scene Viewer fallback | Native floor/surface placement from GLB when available | The browser shader animation is not included | Native controls; resizing disabled; 30 cm upright height |
+| Marker mode | Relative to the measured image marker | Yes | Width in centimetres; upright height capped at 30 cm |
 
 For the **vertical marker → ground nearby** flow:
 
@@ -20,9 +20,11 @@ For the **vertical marker → ground nearby** flow:
 
 The floor spot is chosen by the user. The marker's coordinates are not transferred automatically between the MindAR camera session and the WebXR/native session. A vertical marker by itself cannot tell the browser where the physical floor is.
 
-WebXR accepts only approximately horizontal hit poses, rejecting a vertical wall/marker. It can also accept a tabletop: choose the actual ground with the reticle. Placement starts at **two metres wide**, with a **0.5–10 metre width** slider. Marker mode starts at about **1.6 times marker width**, with a maximum of about **4.6 times**.
+WebXR accepts only approximately horizontal hit poses, rejecting a vertical wall/marker. It can also accept a tabletop: choose the actual ground with the reticle. Both browser modes use a **5–34.5 cm width** slider, defaulting to **30 cm wide**. Aspect ratio is preserved, so upright height stays at or below **30 cm** (about 26.1 cm at the default width). The cap describes the building's upright dimensions; X/Y rotation changes its orientation.
 
-Native assets are `docs/assets/floor-building.glb` and `floor-building.usdz`, both authored at two metres wide. Regenerate with `npm ci` followed by `npm run native:build`; validate with `npm run native:check` and `npm run web:check`. These native assets are separate from the original GLB.
+In marker mode, centimetres require the physical image width: enter it in **Marker image width (cm)** before starting. Measure the full tracking image, not the paper margin. The provided print layout is 15 cm wide; a marker displayed on another screen may have a different width. Floor WebXR uses metre-based tracking and converts the centimetre slider to metres automatically.
+
+Native assets are `docs/assets/floor-building.glb` and `floor-building.usdz`, both authored at **30 cm upright height** (about 34.5 cm wide). Native scaling is disabled using Quick Look's `allowsContentScaling=0` and Scene Viewer's `resizable=false`. Regenerate with `npm ci` followed by `npm run native:build`; validate with `npm run native:check`, `node scripts/check_model_size.mjs`, and `npm run web:check`. These native assets are separate from the original GLB.
 
 Phone hardware testing is still required: a desktop browser cannot verify ARCore floor detection or Apple Quick Look placement. The static checks verify the native GLB and USDZ archive, units, alignment and horizontal anchoring; browser checks cover placement rules and marker-mode regression.
 

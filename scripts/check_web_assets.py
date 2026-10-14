@@ -39,7 +39,7 @@ assert report['marker']['bytes']==(web/'assets/building-targets.mind').stat().st
 native=(web/'assets/floor-building.glb').read_bytes()
 assert struct.unpack('<4sII',native[:12])==(b'glTF',2,len(native))
 native_json=json.loads(native[20:20+struct.unpack_from('<I',native,12)[0]])
-assert abs(native_json['nodes'][0]['scale'][0]*11.4-2)<.00001
+assert abs(native_json['nodes'][0]['scale'][0]*9.9-.3)<.00001
 with ZipFile(web/'assets/floor-building.usdz') as archive:
     assert archive.testzip() is None
     assert archive.namelist()[0]=='model.usda'

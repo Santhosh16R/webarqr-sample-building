@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {createBuildingEffects,createRotationControls} from './building-effects.js?v=20261014-blue';
 import {createSurfacePlacement} from './surface-placement.js?v=20261014-floor';
+import {DEFAULT_WIDTH_CM,floorScaleFromWidthCm} from './model-size.js?v=20261014-cm';
 
 let current;
 const url = filename => new URL(`assets/${filename}`,import.meta.url).href;
@@ -34,7 +35,7 @@ export async function start(container,overlay,{onStatus,onEnd}) {
     const model=state.model=(await new GLTFLoader().loadAsync(url('sample-building.glb'))).scene;
     if(state.ended) {disposeObject(model);return false;}
     state.effects=createBuildingEffects(model,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
-    pivot.add(model);model.scale.setScalar(2/11.4);
+    pivot.add(model);model.scale.setScalar(floorScaleFromWidthCm(DEFAULT_WIDTH_CM));
     const reticle=state.reticle=new THREE.Mesh(new THREE.RingGeometry(.12,.15,48).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0x36b8ff,side:THREE.DoubleSide}));
     reticle.matrixAutoUpdate=false;reticle.visible=false;scene.add(reticle);
     await renderer.xr.setSession(session);
@@ -105,8 +106,8 @@ export function reposition(){
 }
 export function rotate(axis){current?.rotation?.rotate(axis);}
 export function replay(){current?.effects?.replay();}
-export function setScale(width){if(current?.model)current.model.scale.setScalar(THREE.MathUtils.clamp(width,.5,10)/11.4);}
-export function reset(){current?.rotation?.reset();setScale(2);}
+export function setScale(width){if(current?.model)current.model.scale.setScalar(floorScaleFromWidthCm(width));}
+export function reset(){current?.rotation?.reset();setScale(DEFAULT_WIDTH_CM);}
 export function stop(){current?.session.end().catch(()=>{if(current)cleanup(current);});}
 function disposeObject(object){object.traverse(child=>{child.geometry?.dispose();if(child.material){for(const material of [].concat(child.material))material.dispose();}});}
 function cleanup(state){

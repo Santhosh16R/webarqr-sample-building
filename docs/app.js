@@ -1,3 +1,4 @@
+import {DEFAULT_WIDTH_CM,MAX_WIDTH_CM,clampWidthCm,clampMarkerWidthCm,heightFromWidthCm} from './model-size.js?v=20261014-cm';
 const startButton = document.querySelector('#start');
 const startLabel = document.querySelector('#start-label');
 const launchStatus = document.querySelector('#launch-status');
@@ -22,12 +23,17 @@ function configureMode(mode) {
   activeMode = mode;
   const size = document.querySelector('#size');
   const floor = mode === 'floor';
-  size.min = floor ? '.5' : '.04';size.max = floor ? '10' : '.4';
-  size.step = floor ? '.25' : '.01';size.value = floor ? '2' : '.14';
-  document.querySelector('label[for="size"]').textContent = floor ? 'Building width (metres)' : 'Building size · up to 4.6× marker width';
+  size.min = '5';size.max = String(MAX_WIDTH_CM);
+  size.step = '.1';size.value = String(DEFAULT_WIDTH_CM);
+  document.querySelector('label[for="size"]').textContent = 'Building width (cm)';
+  updateSizeReadout();
   document.querySelector('#place-floor').hidden = !floor;
   document.querySelector('#move-floor').hidden = true;
   updateFloorTransfers();
+}
+function updateSizeReadout() {
+  const width=clampWidthCm(Number(document.querySelector('#size').value));
+  document.querySelector('#size-readout').textContent=`Width ${width.toFixed(1)} cm · upright height ${heightFromWidthCm(width).toFixed(1)} cm (max 30 cm)`;
 }
 
 function setStatus(message, error = false) {
@@ -56,7 +62,8 @@ startButton.addEventListener('click', async () => {
   startLabel.textContent = 'Getting ready…';
   setStatus('Loading the building and preparing your camera…');
   try {
-    runtime = await import('./ar.js?v=20261014-floor');
+    runtime = await import('./ar.js?v=20261014-cm');
+    runtime.setMarkerWidth(Number(document.querySelector('#marker-width').value));
     await runtime.start(stage, message => setStatus(message), found => {
       if (activeMode !== 'marker') return;
       if (found) markerSeen = true;
@@ -88,13 +95,18 @@ startButton.addEventListener('click', async () => {
   }
 });
 document.querySelector('#stop').addEventListener('click', () => leaveAR('Camera closed. Ready when you are.'));
-document.querySelector('#size').addEventListener('input', event => runtime?.setScale(Number(event.target.value)));
+document.querySelector('#size').addEventListener('input', event => {runtime?.setScale(Number(event.target.value));updateSizeReadout();});
+document.querySelector('#marker-width').addEventListener('change',event=>{
+  const width=clampMarkerWidthCm(Number(event.target.value));event.target.value=String(width);
+  if(activeMode==='marker')runtime?.setMarkerWidth?.(width);
+});
 document.querySelector('#rotate-x').addEventListener('click', () => runtime?.rotate('x'));
 document.querySelector('#rotate-y').addEventListener('click', () => runtime?.rotate('y'));
 document.querySelector('#replay').addEventListener('click', () => runtime?.replay());
 document.querySelector('#reset').addEventListener('click', () => {
   runtime?.reset();
-  document.querySelector('#size').value = activeMode === 'floor' ? '2' : '.14';
+  document.querySelector('#size').value = String(DEFAULT_WIDTH_CM);
+  updateSizeReadout();
 });
 document.addEventListener('visibilitychange', () => {
   if (document.hidden && running && activeMode === 'marker') leaveAR('Camera paused while the page was away. Tap Start camera to return.');
@@ -145,23 +157,23 @@ async function detectFloorSupport() {
   if (quickLook || android) {
     nativeAvailable=true;
     for(const link of nativeLinks){
-      if(quickLook){link.rel='ar';link.href=new URL('assets/floor-building.usdz',location.href).href;}
+      if(quickLook){link.rel='ar';link.href=new URL('assets/floor-building.usdz?v=20261014-cm#allowsContentScaling=0',location.href).href;}
       else {
-        const model=new URL('assets/floor-building.glb',location.href).href;
+        const model=new URL('assets/floor-building.glb?v=20261014-cm',location.href).href;
         const fallback=new URL('./?native-ar=unavailable',location.href).href;
-        link.href=`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(model)}&mode=ar_preferred&title=Corner%20House#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(fallback)};end;`;
+        link.href=`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(model)}&mode=ar_preferred&resizable=false&title=Corner%20House#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(fallback)};end;`;
       }
     }
     nativeLinks[0].hidden=false;
   }
   try {
     if (navigator.xr && await navigator.xr.isSessionSupported('immersive-ar')) {
-      floorRuntime=await import('./floor-ar.js?v=20261014-floor');
+      floorRuntime=await import('./floor-ar.js?v=20261014-cm');
       floorButton.disabled=false;floorButton.textContent='Place on floor';
       support.textContent='Animated floor placement is available. Scan the marker first, or place directly.';
     }else{
       floorButton.hidden=true;
-      support.textContent=nativeAvailable?'Use the native floor viewer to place and resize the building. Blue construction animation is available in marker mode.':'This browser does not offer floor AR. Marker mode still works with camera access.';
+      support.textContent=nativeAvailable?'Native floor viewer: fixed 30 cm upright height. Blue construction animation and adjustable centimetre width are available in marker mode.':'This browser does not offer floor AR. Marker mode still works with camera access.';
     }
   }catch{
     floorButton.hidden=true;support.textContent='Floor AR could not be checked. Try the native floor viewer, or use marker mode.';

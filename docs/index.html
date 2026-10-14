@@ -7,9 +7,9 @@
   <meta name="description" content="Bring a three-storey building into your space with image-tracked augmented reality. No app to install.">
   <title>Webarqr — A new perspective</title>
   <link rel="icon" href="icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261014-floor">
+  <link rel="stylesheet" href="styles.css?v=20261014-cm">
   <script type="importmap">{"imports":{"three":"./vendor/three/three.module.js","three/addons/":"./vendor/three/addons/"}}</script>
-  <script type="module" src="app.js?v=20261014-floor"></script>
+  <script type="module" src="app.js?v=20261014-cm"></script>
 </head>
 <body>
   <div id="ar-stage" aria-hidden="true"></div>
@@ -31,6 +31,7 @@
           <div class="floor-actions"><button id="floor-start" class="button secondary" disabled>Checking floor support…</button><a id="native-floor" class="button secondary" href="assets/floor-building.usdz" hidden><img src="assets/building-preview.png" width="22" height="22" alt="">Native floor viewer</a></div>
           <p id="floor-support" class="microcopy" role="status">Checking this browser’s floor-placement support.</p>
           <p class="microcopy">No app to install. Your camera stays on your device.</p>
+          <div class="marker-calibration"><label for="marker-width">Marker image width (cm)</label><input id="marker-width" type="number" min="5" max="100" step="0.5" value="15"><p>For marker mode, enter the full image’s measured width. The printed template is 15 cm wide.</p></div>
           <p id="launch-status" class="launch-status" role="status" aria-live="polite"></p>
           <noscript><p class="launch-status error">Enable JavaScript to start the AR experience.</p></noscript>
         </div>
@@ -60,7 +61,7 @@
     <div class="ar-bottom">
       <p id="scan-hint">Fit the whole marker in view. Hold steady.</p>
       <div class="floor-ar-actions"><button id="switch-floor" class="glass-button" hidden disabled>Place on floor nearby</button><a id="native-floor-marker" class="glass-button" href="assets/floor-building.usdz" hidden><img src="assets/building-preview.png" width="18" height="18" alt="">Place on floor · native viewer</a><button id="place-floor" class="glass-button" hidden disabled>Place building</button><button id="move-floor" class="glass-button" hidden>Move building</button></div>
-      <div class="control-panel"><label for="size">Building size · up to 4.6× marker width</label><input id="size" type="range" min="0.04" max="0.4" step="0.01" value="0.14"><div class="control-buttons"><button id="rotate-x" class="glass-button">Rotate X 90°</button><button id="rotate-y" class="glass-button">Rotate Y 90°</button><button id="replay" class="glass-button">Replay build</button><button id="reset" class="glass-button">Reset view</button></div></div>
+      <div class="control-panel"><label for="size">Building width (cm)</label><input id="size" type="range" min="5" max="34.5" step="0.1" value="30"><output id="size-readout" for="size">Width 30.0 cm · upright height 26.1 cm (max 30 cm)</output><div class="control-buttons"><button id="rotate-x" class="glass-button">Rotate X 90°</button><button id="rotate-y" class="glass-button">Rotate Y 90°</button><button id="replay" class="glass-button">Replay build</button><button id="reset" class="glass-button">Reset view</button></div></div>
     </div>
   </section>
 </body>

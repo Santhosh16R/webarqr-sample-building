@@ -3,6 +3,7 @@ import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MindARThree} from './vendor/mindar/mindar-image-three.prod.js';
 import {createBuildingEffects,createRotationControls} from './building-effects.js?v=20261014-blue';
 import {createPoseStabilizer} from './pose-stabilizer.js?v=20261014-stable';
+import {DEFAULT_WIDTH_CM,clampWidthCm,clampMarkerWidthCm,markerScaleFromWidthCm} from './model-size.js?v=20261014-cm';
 
 let engine;
 let building;
@@ -17,6 +18,8 @@ let needsReload = false;
 let cameraPending = false;
 let runId = 0;
 let reportTracking = () => {};
+let markerWidthCm = 15;
+let buildingWidthCm = DEFAULT_WIDTH_CM;
 const assetURL = filename => new URL(`assets/${filename}`, import.meta.url).href;
 
 async function prepare(container) {
@@ -125,7 +128,8 @@ function cleanup() {
   poseStabilizer?.reset();
 }
 export function stop() {++runId; if (cameraPending) needsReload = true; cleanup();}
-export function setScale(value) {if (building) building.scale.setScalar(THREE.MathUtils.clamp(value, .04, .4));}
+export function setScale(value) {buildingWidthCm=clampWidthCm(value);if (building) building.scale.setScalar(markerScaleFromWidthCm(buildingWidthCm,markerWidthCm));}
+export function setMarkerWidth(value) {markerWidthCm=clampMarkerWidthCm(value);setScale(buildingWidthCm);}
 export function rotate(axis = 'y') {rotationControls?.rotate(axis);}
 export function replay() {construction?.replay();}
-export function reset() {rotationControls?.reset(); setScale(.14);}
+export function reset() {rotationControls?.reset(); setScale(DEFAULT_WIDTH_CM);}
