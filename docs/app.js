@@ -1,4 +1,4 @@
-import {DEFAULT_WIDTH_CM,MAX_WIDTH_CM,clampWidthCm,clampMarkerWidthCm,heightFromWidthCm} from './model-size.js?v=20261014-cm';
+import {DEFAULT_WIDTH_CM,MAX_WIDTH_CM,clampWidthCm,clampMarkerWidthCm,heightFromWidthCm} from './model-size.js?v=20261014-tower';
 const startButton = document.querySelector('#start');
 const startLabel = document.querySelector('#start-label');
 const launchStatus = document.querySelector('#launch-status');
@@ -62,7 +62,7 @@ startButton.addEventListener('click', async () => {
   startLabel.textContent = 'Getting ready…';
   setStatus('Loading the building and preparing your camera…');
   try {
-    runtime = await import('./ar.js?v=20261014-cm');
+    runtime = await import('./ar.js?v=20261014-tower');
     runtime.setMarkerWidth(Number(document.querySelector('#marker-width').value));
     await runtime.start(stage, message => setStatus(message), found => {
       if (activeMode !== 'marker') return;
@@ -157,23 +157,23 @@ async function detectFloorSupport() {
   if (quickLook || android) {
     nativeAvailable=true;
     for(const link of nativeLinks){
-      if(quickLook){link.rel='ar';link.href=new URL('assets/floor-building.usdz?v=20261014-cm#allowsContentScaling=0',location.href).href;}
+      if(quickLook){link.rel='ar';link.href=new URL('assets/floor-building.usdz?v=20261014-tower#allowsContentScaling=0',location.href).href;}
       else {
-        const model=new URL('assets/floor-building.glb?v=20261014-cm',location.href).href;
+        const model=new URL('assets/floor-building.glb?v=20261014-tower',location.href).href;
         const fallback=new URL('./?native-ar=unavailable',location.href).href;
-        link.href=`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(model)}&mode=ar_preferred&resizable=false&title=Corner%20House#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(fallback)};end;`;
+        link.href=`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(model)}&mode=ar_preferred&resizable=false&title=iNXT%20Tower#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;S.browser_fallback_url=${encodeURIComponent(fallback)};end;`;
       }
     }
     nativeLinks[0].hidden=false;
   }
   try {
     if (navigator.xr && await navigator.xr.isSessionSupported('immersive-ar')) {
-      floorRuntime=await import('./floor-ar.js?v=20261014-cm');
+      floorRuntime=await import('./floor-ar.js?v=20261014-tower');
       floorButton.disabled=false;floorButton.textContent='Place on floor';
       support.textContent='Animated floor placement is available. Scan the marker first, or place directly.';
     }else{
       floorButton.hidden=true;
-      support.textContent=nativeAvailable?'Native floor viewer: fixed 30 cm upright height. Blue construction animation and adjustable centimetre width are available in marker mode.':'This browser does not offer floor AR. Marker mode still works with camera access.';
+      support.textContent=nativeAvailable?'Native floor viewer: animated tower, maximum 30 cm upright height. Use the viewer’s playback controls to replay.':'This browser does not offer floor AR. Marker mode still works with camera access.';
     }
   }catch{
     floorButton.hidden=true;support.textContent='Floor AR could not be checked. Try the native floor viewer, or use marker mode.';

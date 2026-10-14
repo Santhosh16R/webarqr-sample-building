@@ -2,13 +2,15 @@
 
 ## Floor placement and larger models
 
+The active model is **iNXT Tower**, loaded from `docs/assets/iNXT_Tower_Animated.glb`. It has one **20-second Progressive Construction** clip, with cyan emissive lighting. Marker mode starts playback on recognition and pauses it while the marker is lost; **Replay build** restarts it. Floor WebXR starts playback when placed. Both browser modes hold the completed frame. Native viewers receive an animated GLB (Android) or a converted animated USDZ (iPhone). Native playback starts when its viewer loads the asset, and uses that viewer’s playback controls; the webpage cannot trigger playback after native placement.
+
 The site now offers **floor placement** as well as marker tracking. It checks capabilities at runtime rather than assuming that every Android or iPhone browser supports WebXR.
 
-| Mode | Placement | Blue construction animation | Controls |
+| Mode | Placement | Embedded construction animation | Controls |
 | --- | --- | --- | --- |
 | WebXR on a compatible phone/browser | Horizontal-surface hit testing; optional XR anchors | Yes | Browser X/Y rotation, replay, size and reposition |
-| Apple AR Quick Look fallback | Native floor/surface placement from USDZ | The browser shader animation is not included | Native move/rotate controls; fixed 30 cm upright height |
-| Android Scene Viewer fallback | Native floor/surface placement from GLB when available | The browser shader animation is not included | Native controls; resizing disabled; 30 cm upright height |
+| Apple AR Quick Look fallback | Native floor/surface placement from USDZ | Yes, embedded transform animation | Native move/rotate controls; fixed 30 cm upright height |
+| Android Scene Viewer fallback | Native floor/surface placement from GLB when available | Yes, embedded transform animation | Native controls; resizing disabled; 30 cm upright height |
 | Marker mode | Relative to the measured image marker | Yes | Width in centimetres; upright height capped at 30 cm |
 
 For the **vertical marker → ground nearby** flow:
@@ -16,19 +18,19 @@ For the **vertical marker → ground nearby** flow:
 1. Show or print the marker vertically. Use **Start camera** to scan it.
 2. Once it is recognized, tap **Place on floor nearby** on compatible WebXR devices, or **Place on floor · native viewer** where offered.
 3. In WebXR, aim at the floor beside the marker. Move the phone slowly until the blue ring appears, then tap **Place building**. In a native viewer, use the viewer's AR placement controls.
-4. The building is now placed in the AR world and no longer requires the marker to stay in view. In WebXR it rises with the blue construction effect.
+4. The building is now placed in the AR world and no longer requires the marker to stay in view. In WebXR its embedded 20-second construction clip plays.
 
 The floor spot is chosen by the user. The marker's coordinates are not transferred automatically between the MindAR camera session and the WebXR/native session. A vertical marker by itself cannot tell the browser where the physical floor is.
 
-WebXR accepts only approximately horizontal hit poses, rejecting a vertical wall/marker. It can also accept a tabletop: choose the actual ground with the reticle. Both browser modes use a **5–34.5 cm width** slider, defaulting to **30 cm wide**. Aspect ratio is preserved, so upright height stays at or below **30 cm** (about 26.1 cm at the default width). The cap describes the building's upright dimensions; X/Y rotation changes its orientation.
+WebXR accepts only approximately horizontal hit poses, rejecting a vertical wall/marker. It can also accept a tabletop: choose the actual ground with the reticle. Both browser modes use a **5–7.3 cm width** slider, defaulting to **7.3 cm wide**. Aspect ratio is preserved, so upright height stays at or below **30 cm** (about 29.8 cm at the default width). The cap describes the building's upright dimensions; X/Y rotation changes its orientation.
 
 In marker mode, centimetres require the physical image width: enter it in **Marker image width (cm)** before starting. Measure the full tracking image, not the paper margin. The provided print layout is 15 cm wide; a marker displayed on another screen may have a different width. Floor WebXR uses metre-based tracking and converts the centimetre slider to metres automatically.
 
-Native assets are `docs/assets/floor-building.glb` and `floor-building.usdz`, both authored at **30 cm upright height** (about 34.5 cm wide). Native scaling is disabled using Quick Look's `allowsContentScaling=0` and Scene Viewer's `resizable=false`. Regenerate with `npm ci` followed by `npm run native:build`; validate with `npm run native:check`, `node scripts/check_model_size.mjs`, and `npm run web:check`. These native assets are separate from the original GLB.
+Native assets are `docs/assets/floor-building.glb` and `floor-building.usdz`, both authored at **30 cm upright height** (about 7.35 cm wide). Native scaling is disabled using Quick Look's `allowsContentScaling=0` and Scene Viewer's `resizable=false`. Regenerate with `npm ci` followed by `npm run native:build`; validate with `npm run native:check`, `node scripts/check_model_size.mjs`, and `npm run web:check`. These native assets are separate from the original GLB.
 
 Phone hardware testing is still required: a desktop browser cannot verify ARCore floor detection or Apple Quick Look placement. The static checks verify the native GLB and USDZ archive, units, alignment and horizontal anchoring; browser checks cover placement rules and marker-mode regression.
 
-Open the page on your phone, allow camera access, and point it at the included **Building 01** marker. A three-storey commercial building appears anchored to the image. No app installation is required.
+Open the page on your phone, allow camera access, and point it at the included **Building 01** marker. The iNXT tower appears anchored to the image. No app installation is required.
 
 The application is in `docs/`, ready for HTTPS static hosting or GitHub Pages. The original model and generation tools remain in `outputs/`.
 
@@ -39,7 +41,7 @@ The application is in `docs/`, ready for HTTPS static hosting or GitHub Pages. T
 3. Place the marker flat in even light. Avoid glare on the paper or second screen.
 4. On your phone, tap **Start camera** and allow camera access.
 5. Frame the whole marker from about 30–60 cm away. Move slowly until the building appears.
-6. The building rises smoothly from the ground with a blue scan ring, illuminated edges, and blue window lights. The reveal takes about five seconds and pauses if the marker is lost.
+6. The tower plays its 20-second staged construction animation with cyan lighting. Playback pauses if the marker is lost.
 7. Use **Building size**, **Rotate X 90°**, or **Rotate Y 90°** to explore it. **Replay build** repeats the construction reveal; **Reset view** restores both rotation axes and the default size. **Close camera** releases the camera. Leaving the page also pauses the experience.
 
 The marker must be on paper or another screen; a phone cannot scan an image displayed on its own screen.
@@ -77,9 +79,9 @@ Open `http://localhost:8000` on the same computer. Desktop localhost is permitte
 
 ## Replace the model
 
-Replace `docs/assets/sample-building.glb` with a self-contained, Y-up GLB. Adjust the default scale in `docs/ar.js` and the slider values in `docs/index.html` and `docs/app.js` if the new model has different dimensions.
+The original sample remains available as a reference. The active model is `docs/assets/iNXT_Tower_Animated.glb`; its source file is copied unchanged. Its animation envelope is 40.60 × 165.65 × 38.00 model units including the plaza, with 84,884 triangles and 1,367 rendered mesh primitives. Sizing uses this full envelope to enforce the 30 cm height limit without stretching.
 
-The supplied model is 11.4 × 9.9 × 8.8 metres, has its origin at the base centre, and has 1,668 triangles and seven material primitives. Its GLB validation report has zero errors and warnings. The model's Y-up axis is rotated outward from the marker plane so the building stands on a marker placed on a table.
+After changing this model, run `node scripts/inspect_tower.mjs`, update `docs/model-size.js` and the ground offset in `docs/tower-animation.js` to match its dimensions, and regenerate native assets with `npm run native:build`. The conversion preserves the first clip’s sampled transforms, cyan emissive colours, and double-sided geometry. `node scripts/check_tower_animation.mjs` checks playback and replay; `python scripts/check_tower_usdz.py` requires the official `usd-core` Python package (or the local verification runtime) to check the iPhone asset. The existing Building 01 tracking image stays the same, so existing printed markers continue working.
 
 ## Replace or recompile the marker
 

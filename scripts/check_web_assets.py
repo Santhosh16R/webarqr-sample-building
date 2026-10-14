@@ -39,14 +39,19 @@ assert report['marker']['bytes']==(web/'assets/building-targets.mind').stat().st
 native=(web/'assets/floor-building.glb').read_bytes()
 assert struct.unpack('<4sII',native[:12])==(b'glTF',2,len(native))
 native_json=json.loads(native[20:20+struct.unpack_from('<I',native,12)[0]])
-assert abs(native_json['nodes'][0]['scale'][0]*9.9-.3)<.00001
+dims=json.loads((ROOT/'outputs/tower-dimensions.json').read_text())
+root=native_json['scenes'][native_json.get('scene',0)]['nodes'][0]
+assert abs(native_json['nodes'][root]['scale'][0]*dims['height']-.3)<.00001
+assert len(native_json['animations'])==1 and len(native_json['animations'][0]['channels'])==1294
 with ZipFile(web/'assets/floor-building.usdz') as archive:
     assert archive.testzip() is None
     assert archive.namelist()[0]=='model.usda'
     stage=archive.read('model.usda').decode()
     assert 'metersPerUnit = 1' in stage and 'upAxis = "Y"' in stage
     assert 'preliminary:planeAnchoring:alignment = "horizontal"' in stage
-    assert len([name for name in archive.namelist() if name.startswith('geometries/')])==7
+    assert len([name for name in archive.namelist() if name.startswith('geometries/')])>=1302
+    assert 'autoPlay = true' in stage and 'endTimeCode = 480' in stage
+    assert stage.count('xformOp:transform.timeSamples')>=1293
     for item in archive.infolist():
         assert item.compress_type==ZIP_STORED
         with open(web/'assets/floor-building.usdz','rb') as stream:

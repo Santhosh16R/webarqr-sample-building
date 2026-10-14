@@ -1,0 +1,26 @@
+{
+  "result": "passed",
+  "meshes": 1367,
+  "animatedTransforms": 1358,
+  "heightsMetresAt0_5_10_15_20": [
+    0.2918502867,
+    0.2918502867,
+    0.2918502867,
+    0.2918502867,
+    0.2999999999505001
+  ],
+  "activeAnimatedMeshesAt0_5_10_15_20": [
+    0,
+    260,
+    722,
+    1166,
+    1358
+  ],
+  "checks": [
+    "OpenUSD loads complete USDZ",
+    "geometry references resolve",
+    "animation time samples",
+    "30 cm height cap"
+  ],
+  "physicalIPhoneTested": false
+}

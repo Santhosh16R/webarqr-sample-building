@@ -2,37 +2,47 @@
   "uri": "floor-building.glb",
   "mimeType": "model/gltf-binary",
   "validatorVersion": "2.0.0-dev.3.10",
-  "validatedAt": "2026-10-14T12:13:28.130Z",
+  "validatedAt": "2026-10-14T14:33:44.102Z",
   "issues": {
     "numErrors": 0,
     "numWarnings": 0,
-    "numInfos": 0,
+    "numInfos": 1,
     "numHints": 0,
-    "messages": [],
+    "messages": [
+      {
+        "code": "UNUSED_OBJECT",
+        "message": "This object may be unused.",
+        "severity": 2,
+        "pointer": "/meshes/1301/primitives/0/attributes/TEXCOORD_0"
+      }
+    ],
     "truncated": false
   },
   "info": {
     "version": "2.0",
-    "generator": "Sample commercial building generator",
+    "generator": "Khronos glTF Blender I/O v4.4.56",
+    "extensionsUsed": [
+      "KHR_materials_emissive_strength"
+    ],
     "resources": [
       {
         "pointer": "/buffers/0",
         "mimeType": "application/gltf-buffer",
         "storage": "glb",
-        "byteLength": 90072
+        "byteLength": 10539172
       }
     ],
-    "animationCount": 0,
-    "materialCount": 7,
+    "animationCount": 1,
+    "materialCount": 10,
     "hasMorphTargets": false,
     "hasSkins": false,
     "hasTextures": false,
     "hasDefaultScene": true,
-    "drawCallCount": 7,
-    "totalVertexCount": 3336,
-    "totalTriangleCount": 1668,
-    "maxUVs": 0,
+    "drawCallCount": 1367,
+    "totalVertexCount": 114891,
+    "totalTriangleCount": 84884,
+    "maxUVs": 1,
     "maxInfluences": 0,
-    "maxAttributes": 2
+    "maxAttributes": 3
   }
 }

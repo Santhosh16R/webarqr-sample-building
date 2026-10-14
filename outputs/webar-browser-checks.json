@@ -65,15 +65,23 @@
     "physicalWebXrAndQuickLook": "not tested"
   },
   "centimetreSizing": {
-    "widthRangeCm": [5,34.5],
-    "defaultWidthCm": 30,
-    "maximumUprightHeightCm": 30,
-    "floorMetreConversion": "passed",
-    "markerPhysicalWidthCalibration": "passed",
-    "oversizeInputClamping": "passed",
-    "nativeModelsHeightCm": 30,
-    "nativeScaling": "disabled"
+    "widthRangeCm": [
+      5,
+      7.3
+    ],
+    "defaultWidthCm": 7.3,
+    "maxUprightHeightCm": 30,
+    "nativeHeightCm": 30,
+    "requiresMeasuredMarkerWidth": true
   },
   "physicalPhoneCamera": "not tested",
-  "result": "passed"
+  "result": "passed",
+  "activeModel": {
+    "name": "iNXT Tower",
+    "clip": "Progressive Construction",
+    "durationSeconds": 20,
+    "nativeAnimationIncluded": true,
+    "checks": "tower-animation-checks.json and tower-usdz-checks.json",
+    "physicalPhonesTested": false
+  }
 }

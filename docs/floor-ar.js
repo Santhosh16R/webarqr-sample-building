@@ -1,8 +1,9 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
-import {createBuildingEffects,createRotationControls} from './building-effects.js?v=20261014-blue';
+import {createRotationControls} from './building-effects.js?v=20261014-blue';
 import {createSurfacePlacement} from './surface-placement.js?v=20261014-floor';
-import {DEFAULT_WIDTH_CM,floorScaleFromWidthCm} from './model-size.js?v=20261014-cm';
+import {createTowerAnimation,showTowerProgress} from './tower-animation.js?v=20261014-tower';
+import {DEFAULT_WIDTH_CM,floorScaleFromWidthCm} from './model-size.js?v=20261014-tower';
 
 let current;
 const url = filename => new URL(`assets/${filename}`,import.meta.url).href;
@@ -32,10 +33,11 @@ export async function start(container,overlay,{onStatus,onEnd}) {
     const pivot=state.pivot=new THREE.Group();root.add(pivot);
     state.rotation=createRotationControls(pivot);
     state.placement=createSurfacePlacement(root);
-    const model=state.model=(await new GLTFLoader().loadAsync(url('sample-building.glb'))).scene;
+    const gltf=await new GLTFLoader().loadAsync(url('iNXT_Tower_Animated.glb'));
+    const model=state.model=gltf.scene;
     if(state.ended) {disposeObject(model);return false;}
-    state.effects=createBuildingEffects(model,{reducedMotion:matchMedia('(prefers-reduced-motion: reduce)').matches});
-    pivot.add(model);model.scale.setScalar(floorScaleFromWidthCm(DEFAULT_WIDTH_CM));
+    state.effects=createTowerAnimation(gltf,{onProgress:showTowerProgress});state.model=state.effects.model;
+    pivot.add(state.model);state.model.scale.setScalar(floorScaleFromWidthCm(DEFAULT_WIDTH_CM));
     const reticle=state.reticle=new THREE.Mesh(new THREE.RingGeometry(.12,.15,48).rotateX(-Math.PI/2),new THREE.MeshBasicMaterial({color:0x36b8ff,side:THREE.DoubleSide}));
     reticle.matrixAutoUpdate=false;reticle.visible=false;scene.add(reticle);
     await renderer.xr.setSession(session);
@@ -112,6 +114,7 @@ export function stop(){current?.session.end().catch(()=>{if(current)cleanup(curr
 function disposeObject(object){object.traverse(child=>{child.geometry?.dispose();if(child.material){for(const material of [].concat(child.material))material.dispose();}});}
 function cleanup(state){
   if(state.ended)return;state.ended=true;state.hit?.cancel();state.anchor?.delete();
+  state.effects?.dispose();
   state.renderer?.setAnimationLoop(null);if(state.scene)disposeObject(state.scene);
   state.renderer?.dispose();state.renderer?.domElement.remove();
   if(current===state)current=null;state.onEnd();

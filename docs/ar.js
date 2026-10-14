@@ -1,9 +1,10 @@
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MindARThree} from './vendor/mindar/mindar-image-three.prod.js';
-import {createBuildingEffects,createRotationControls} from './building-effects.js?v=20261014-blue';
+import {createRotationControls} from './building-effects.js?v=20261014-blue';
 import {createPoseStabilizer} from './pose-stabilizer.js?v=20261014-stable';
-import {DEFAULT_WIDTH_CM,clampWidthCm,clampMarkerWidthCm,markerScaleFromWidthCm} from './model-size.js?v=20261014-cm';
+import {createTowerAnimation,showTowerProgress} from './tower-animation.js?v=20261014-tower';
+import {DEFAULT_WIDTH_CM,clampWidthCm,clampMarkerWidthCm,markerScaleFromWidthCm} from './model-size.js?v=20261014-tower';
 
 let engine;
 let building;
@@ -24,7 +25,7 @@ const assetURL = filename => new URL(`assets/${filename}`, import.meta.url).href
 
 async function prepare(container) {
   if (engine) return;
-  const gltf = await new GLTFLoader().loadAsync(assetURL('sample-building.glb'));
+  const gltf = await new GLTFLoader().loadAsync(assetURL('iNXT_Tower_Animated.glb'));
   // Preflight the target so HTTP errors are caught before the camera opens.
   const response = await fetch(assetURL('building-targets.mind'));
   if (!response.ok) throw new Error('The marker could not load. Refresh this page and try again.');
@@ -51,8 +52,8 @@ async function prepare(container) {
   ground.rotation.x = Math.PI / 2;
   pivot = new THREE.Group();
   rotationControls = createRotationControls(pivot);
-  building = gltf.scene;
-  construction = createBuildingEffects(building, {reducedMotion:window.matchMedia('(prefers-reduced-motion: reduce)').matches});
+  construction = createTowerAnimation(gltf,{onProgress:showTowerProgress});
+  building = construction.model;
   pivot.add(building);
   ground.add(pivot);
   stableAnchor.add(ground);

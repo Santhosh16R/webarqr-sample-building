@@ -1,7 +1,8 @@
-export const MODEL_WIDTH_M = 11.4;
-export const MODEL_HEIGHT_M = 9.9;
+// Full animation envelope, including the tower's plaza, measured at 24 fps.
+export const MODEL_WIDTH_M = 40.599998474121094;
+export const MODEL_HEIGHT_M = 165.64999997615814;
 export const MAX_HEIGHT_CM = 30;
-export const DEFAULT_WIDTH_CM = 30;
+export const DEFAULT_WIDTH_CM = 7.3;
 // Round down so the largest selectable upright height never exceeds 30 cm.
 export const MAX_WIDTH_CM = Math.floor(MAX_HEIGHT_CM*MODEL_WIDTH_M/MODEL_HEIGHT_M*10)/10;
 export function clampWidthCm(value) {return Math.min(MAX_WIDTH_CM,Math.max(5,Number.isFinite(value)?value:DEFAULT_WIDTH_CM));}
